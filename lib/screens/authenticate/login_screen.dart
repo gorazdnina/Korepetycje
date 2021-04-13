@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_app2/services/auth.dart';
 import 'package:flutter_app2/utilities/constants.dart';
-import 'package:flutter_app2/screens/sign_up_screen.dart';
+import 'package:flutter_app2/screens/authenticate/sign_up_screen.dart';
 
 class LoginScreen extends StatefulWidget {
   @override
@@ -10,6 +11,7 @@ class LoginScreen extends StatefulWidget {
 
 class _LoginScreenState extends State<LoginScreen> {
   bool _rememberMe = false;
+  final AuthService _auth = AuthService();
 
   Widget _buildEmailTF() {
     return Column(
@@ -128,7 +130,15 @@ class _LoginScreenState extends State<LoginScreen> {
       width: double.infinity,
       child: RaisedButton(
         elevation: 5.0,
-        onPressed: () => print('Login Button Pressed'),
+        onPressed: () async { print('Login Button Pressed');
+        dynamic result = await _auth.signInAnon();
+        if(result==null){
+          print('error signing in');
+        }else{
+          print('signed in');
+          print(result.uid);
+        }
+        },
         padding: EdgeInsets.all(15.0),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(30.0),
