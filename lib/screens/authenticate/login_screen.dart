@@ -5,6 +5,8 @@ import 'package:flutter_app2/utilities/constants.dart';
 import 'package:flutter_app2/screens/authenticate/sign_up_screen.dart';
 
 class LoginScreen extends StatefulWidget {
+  final Function toogleView;
+  LoginScreen({this.toogleView});
   @override
   _LoginScreenState createState() => _LoginScreenState();
 }
@@ -12,6 +14,12 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   bool _rememberMe = false;
   final AuthService _auth = AuthService();
+  final _formKey = GlobalKey<FormState>();
+
+  //text field state
+  String email ='';
+  String password ='';
+  String error='';
 
   Widget _buildEmailTF() {
     return Column(
@@ -27,6 +35,10 @@ class _LoginScreenState extends State<LoginScreen> {
           decoration: kBoxDecorationStyle,
           height: 60.0,
           child: TextField(
+                        //validator: (val)=> val.length <6 ? "Enter a password 6+" : null,
+            onChanged:(val){
+              setState(()=> email = val);
+            },
             keyboardType: TextInputType.emailAddress,
             style: TextStyle(
               color: Color(0xFF393939),
@@ -62,6 +74,10 @@ class _LoginScreenState extends State<LoginScreen> {
           decoration: kBoxDecorationStyle,
           height: 60.0,
           child: TextField(
+                        //validator: (val)=> val.length <6 ? "Enter a password 6+" : null,
+            onChanged:(val){
+              setState(()=> password = val);
+            },
             obscureText: true,
             style: TextStyle(
               color: Color(0xFF393939),
@@ -129,15 +145,18 @@ class _LoginScreenState extends State<LoginScreen> {
       padding: EdgeInsets.symmetric(vertical: 25.0),
       width: double.infinity,
       child: RaisedButton(
-        elevation: 5.0,
-        onPressed: () async { print('Login Button Pressed');
-        dynamic result = await _auth.signInAnon();
-        if(result==null){
-          print('error signing in');
-        }else{
-          print('signed in');
-          print(result.uid);
-        }
+        elevation: 5.0,                                                                                     ////////
+        onPressed: () async { 
+          print('Login Button Pressed');
+          print(password);
+          print(email);
+          dynamic result = await _auth.signInWithEmailAndPassword(email, password);
+          if(result ==null)
+          {
+            print('something goes wrong');
+          }else{
+            print('login correct');
+          }
         },
         padding: EdgeInsets.all(15.0),
         shape: RoundedRectangleBorder(
@@ -156,10 +175,6 @@ class _LoginScreenState extends State<LoginScreen> {
         ),
       ),
     );
-  }
-
-  void _navigateToNextScreen(BuildContext context) {
-    Navigator.of(context).push(MaterialPageRoute(builder: (context) => SignUpScreen()));
   }
 
   Widget _buildSignInWithText() {
@@ -230,7 +245,9 @@ class _LoginScreenState extends State<LoginScreen> {
 
   Widget _buildSignupBtn() {
     return GestureDetector(
-      onTap: () => _navigateToNextScreen(context),//print('Sign Up Button Pressed'),
+      onTap: (){
+        widget.toogleView();
+      },
       child: RichText(
         text: TextSpan(
           children: [

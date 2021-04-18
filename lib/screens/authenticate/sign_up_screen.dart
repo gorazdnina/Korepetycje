@@ -1,15 +1,26 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_app2/screens/wrapper.dart';
+import 'package:flutter_app2/services/auth.dart';
 import 'package:flutter_app2/utilities/constants.dart';
 import 'package:flutter_app2/screens/authenticate/login_screen.dart';
 
 class SignUpScreen extends StatefulWidget {
+  final Function toogleView;
+  SignUpScreen({this.toogleView});
   @override
   _SignUpScreenState createState() => _SignUpScreenState();
 }
 
 class _SignUpScreenState extends State<SignUpScreen> {
   bool _rememberMe = false;
+
+  final AuthService _auth = AuthService();
+  final _formKey = GlobalKey<FormState>();
+
+  String email ='';
+  String password = '';
+  String error='';
 
   Widget _buildEmailTF() {
     return Column(
@@ -24,7 +35,12 @@ class _SignUpScreenState extends State<SignUpScreen> {
           alignment: Alignment.centerLeft,
           decoration: kBoxDecorationStyle,
           height: 60.0,
+          //key: _formKey,
           child: TextField(
+            //validator: (val)=> val.isEmpty ? "Enter an email" : null,
+            onChanged: (val){
+              setState(()=>email=val);
+            },
             keyboardType: TextInputType.emailAddress,
             style: TextStyle(
               color: Color(0xFF393939),
@@ -56,10 +72,15 @@ class _SignUpScreenState extends State<SignUpScreen> {
         ),
         SizedBox(height: 10.0),
         Container(
+         // key: _formKey,
           alignment: Alignment.centerLeft,
           decoration: kBoxDecorationStyle,
           height: 60.0,
           child: TextField(
+            //validator: (val)=> val.length <6 ? "Enter a password 6+" : null,
+            onChanged: (val){
+              setState(()=>password=val);
+            },
             obscureText: true,
             style: TextStyle(
               color: Color(0xFF393939),
@@ -79,10 +100,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
         ),
       ],
     );
-  }
-
-  void _navigateToNextScreen(BuildContext context) {
-    Navigator.of(context).push(MaterialPageRoute(builder: (context) => LoginScreen()));
   }
 
   Widget _buildConfirmPasswordTF() {
@@ -197,7 +214,18 @@ class _SignUpScreenState extends State<SignUpScreen> {
       width: double.infinity,
       child: RaisedButton(
         elevation: 5.0,
-        onPressed: () => print('Register Button Pressed'),
+        onPressed: () async{
+          print('Register Button Pressed');                                                             ////////TTTT
+          //if(_formKey.currentState.validate()){
+          print(email);
+          print(password);
+          dynamic result = await _auth.registerwithEmailandPassword(email, password);
+          if(result == null)
+          {
+            setState(()=>error='please supply a valid email');
+          }
+          //}
+        },
         padding: EdgeInsets.all(15.0),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(30.0),
@@ -264,7 +292,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
   Widget _buildSignInBtn() {
     return GestureDetector(
-      onTap: () => _navigateToNextScreen(context),//print('Sign in Button Pressed'),
+      onTap:(){
+        widget.toogleView();
+      },
       child: RichText(
         text: TextSpan(
           children: [
