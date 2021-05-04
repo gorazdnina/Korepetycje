@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_app2/services/auth.dart';
 import 'package:flutter_app2/utilities/constants.dart';
 import 'package:flutter_app2/screens/authenticate/sign_up_screen.dart';
+import 'package:flutter_app2/utilities/loading.dart';
 
 class LoginScreen extends StatefulWidget {
   final Function toogleView;
@@ -13,10 +14,9 @@ class LoginScreen extends StatefulWidget {
 
 class _LoginScreenState extends State<LoginScreen> {
   bool _rememberMe = false;
+  bool loading = false;
   final AuthService _auth = AuthService();
-  final _formKey = GlobalKey<FormState>();
 
-  //text field state
   String email ='';
   String password ='';
   String error='';
@@ -35,7 +35,6 @@ class _LoginScreenState extends State<LoginScreen> {
           decoration: kBoxDecorationStyle,
           height: 60.0,
           child: TextField(
-                        //validator: (val)=> val.length <6 ? "Enter a password 6+" : null,
             onChanged:(val){
               setState(()=> email = val);
             },
@@ -74,7 +73,6 @@ class _LoginScreenState extends State<LoginScreen> {
           decoration: kBoxDecorationStyle,
           height: 60.0,
           child: TextField(
-                        //validator: (val)=> val.length <6 ? "Enter a password 6+" : null,
             onChanged:(val){
               setState(()=> password = val);
             },
@@ -145,15 +143,20 @@ class _LoginScreenState extends State<LoginScreen> {
       padding: EdgeInsets.symmetric(vertical: 25.0),
       width: double.infinity,
       child: RaisedButton(
-        elevation: 5.0,                                                                                     ////////
+        elevation: 5.0,                                                                                    
         onPressed: () async { 
           print('Login Button Pressed');
           print(password);
           print(email);
+          setState(()=>loading=true);
           dynamic result = await _auth.signInWithEmailAndPassword(email, password);
           if(result ==null)
           {
             print('something goes wrong');
+            setState((){
+              error = "Wrong email or password";
+              loading = false;
+            });
           }else{
             print('login correct');
           }
@@ -275,7 +278,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return loading ? Loading() : Scaffold(
       body: AnnotatedRegion<SystemUiOverlayStyle>(
         value: SystemUiOverlayStyle.light,
         child: GestureDetector(
@@ -285,21 +288,6 @@ class _LoginScreenState extends State<LoginScreen> {
               Container(
                 height: double.infinity,
                 width: double.infinity,
-               // decoration: BoxDecoration(
-                  /*gradient: LinearGradient(
-                    begin: Alignment.topCenter,
-                    end: Alignment.bottomCenter,
-                    colors: [
-                      Color(0xFFEAA5EC),
-                      Color(0xFFE9C1EC),
-                      Color(0xFFE3CAE5),
-                      Color(0xFFE6E0E7),
-                    ],
-                    stops: [0.1, 0.4, 0.7, 0.9],
-                  ),
-
-                   */
-                //),
                 decoration: BoxDecoration(
                   image: DecorationImage(
                     image: AssetImage("assets/images/tlo.jpeg"),
@@ -336,6 +324,11 @@ class _LoginScreenState extends State<LoginScreen> {
                       _buildForgotPasswordBtn(),
                       _buildRememberMeCheckbox(),
                       _buildLoginBtn(),
+                      SizedBox(height: 12),
+                      Text(
+                      error,
+                      style: TextStyle(color: Colors.red, fontSize: 14),
+                      ),
                       _buildSignInWithText(),
                       _buildSocialBtnRow(),
                       _buildSignupBtn(),

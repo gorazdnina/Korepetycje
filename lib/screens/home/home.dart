@@ -1,5 +1,7 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_app2/models/useerr.dart';
 import 'package:flutter_app2/services/auth.dart';
 import 'package:flutter_app2/utilities/constants.dart';
 import 'package:flutter_app2/screens/authenticate/sign_up_screen.dart';
@@ -7,6 +9,25 @@ import 'package:flutter_calendar_carousel/flutter_calendar_carousel.dart';
 import 'package:flutter_calendar_carousel/flutter_calendar_carousel.dart' show CalendarCarousel, EventList;
 import 'package:flutter_calendar_carousel/classes/event.dart';
 import 'package:flutter_calendar_carousel/classes/event_list.dart';
+
+import 'package:flutter_app2/services/database.dart';
+import 'package:provider/provider.dart';
+
+import 'brews_list.dart';
+
+
+// class Home extends StatelessWidget{
+//   final AuthService _auth = AuthService();
+//   @override
+//   Widget build(BuildContext context){
+//     return StreamProvider<QuerySnapshot>.value(
+//       child: Scaffold(
+
+//       ),
+//     );
+//   }
+// }
+
 
 class Home extends StatefulWidget{
   @override
@@ -203,84 +224,79 @@ class _HomeState extends State<Home>{
     );
   }
 
-  @override
+ @override
   Widget build(BuildContext context){
-    return Scaffold(
+    return StreamProvider<List<Useerr>>.value(
+    value: DataBaseService().brews,
+    child: Scaffold(
       body: AnnotatedRegion<SystemUiOverlayStyle>(
         value: SystemUiOverlayStyle.light,
-        child: GestureDetector(
-          onTap: () => FocusScope.of(context).unfocus(),
-          child: Stack(
-            children: <Widget>[
-              Container(
-                height: double.infinity,
-                width: double.infinity,
-                decoration: BoxDecoration(
-                  image: DecorationImage(
-                    image: AssetImage("assets/images/tlo.jpeg"),
-                    fit: BoxFit.cover,
-                  ),
-                ),
-              ),
-              Container(
-                height: double.infinity,
-                child: SingleChildScrollView(
-                  physics: AlwaysScrollableScrollPhysics(),
-                  padding: EdgeInsets.symmetric(
-                    horizontal: 40.0,
-                    vertical: 120.0,
-                  ),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      _widgetOptions.elementAt(_selectedIndex),
-                      /*Text(
-                        'Korepetycje',
-                        style: TextStyle(
-                          color: Color(0xFF393939),
-                          fontFamily: 'OpenSans',
-                          fontSize: 30.0,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),*/
-                      SizedBox(height: 30.0),
-                      _selectScreen(),
-                      //_calendarScreen(),
-                      //_widgetOptions.elementAt(_selectedIndex),
-                    ],
-                  ),
+        child: BrewList(),
+      //   value: SystemUiOverlayStyle.light,
+      //   child: GestureDetector(
+      //     onTap: () => FocusScope.of(context).unfocus(),
+      //     child: Stack(
+      //       children: <Widget>[
+      //         Container(
+      //           height: double.infinity,
+      //           width: double.infinity,
+      //           decoration: BoxDecoration(
+      //             image: DecorationImage(
+      //               image: AssetImage("assets/images/tlo.jpeg"),
+      //               fit: BoxFit.cover,
+      //             ),
+      //           ),
+      //         ),
+      //         Container(
+      //           height: double.infinity,
+      //           child: SingleChildScrollView(
+      //             physics: AlwaysScrollableScrollPhysics(),
+      //             padding: EdgeInsets.symmetric(
+      //               horizontal: 40.0,
+      //               vertical: 120.0,
+      //             ),
+      //             child: Column(
+      //               mainAxisAlignment: MainAxisAlignment.center,
+      //               children: <Widget>[
+      //                 _widgetOptions.elementAt(_selectedIndex),
+      //                 SizedBox(height: 30.0),
+      //                 _selectScreen(),
+      //               ],
+      //             ),
 
-                ),
-              )
-            ],
-          ),
-        ),
-      ),
-      bottomNavigationBar: BottomNavigationBar(
-        items: const <BottomNavigationBarItem>[
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: 'Ogłoszenie',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.calendar_today),
-            label: 'Kalendarz',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.favorite),
-            label: 'Ulubione',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.shopping_cart),
-            label: 'Koszyk',
-          ),
-        ],
-        currentIndex: _selectedIndex,
-        iconSize: 30,
-        unselectedItemColor: Color(0xFF3B3A3A),
-        selectedItemColor: Color(0xFFECB6B6),
-        onTap: _onItemTapped,
-      ),
+      //           ),
+      //         )
+      //       ],
+      //     ),
+      //   ),
+      // ),
+      // bottomNavigationBar: BottomNavigationBar(
+      //   items: const <BottomNavigationBarItem>[
+      //     BottomNavigationBarItem(
+      //       icon: Icon(Icons.home),
+      //       label: 'Ogłoszenie',
+      //     ),
+      //     BottomNavigationBarItem(
+      //       icon: Icon(Icons.calendar_today),
+      //       label: 'Kalendarz',
+      //     ),
+      //     BottomNavigationBarItem(
+      //       icon: Icon(Icons.favorite),
+      //       label: 'Ulubione',
+      //     ),
+      //     BottomNavigationBarItem(
+      //       icon: Icon(Icons.shopping_cart),
+      //       label: 'Koszyk',
+      //     ),
+      //   ],
+      //   currentIndex: _selectedIndex,
+      //   iconSize: 30,
+      //   unselectedItemColor: Color(0xFF3B3A3A),
+      //   selectedItemColor: Color(0xFFECB6B6),
+      //   onTap: _onItemTapped,
+      // ),
+      // 
+      ),////////jak cos dac koma
       appBar: AppBar(
         title: Text('Korepetycje'),
         backgroundColor: Color(0xFFECB6B6),
@@ -295,6 +311,92 @@ class _HomeState extends State<Home>{
           )
         ],
       ),
+    ),
     );
   }
+
+
+  // @override
+  // Widget build(BuildContext context){
+  //   return Scaffold(
+  //     body: AnnotatedRegion<SystemUiOverlayStyle>(
+  //       value: SystemUiOverlayStyle.light,
+  //       child: GestureDetector(
+  //         onTap: () => FocusScope.of(context).unfocus(),
+  //         child: Stack(
+  //           children: <Widget>[
+  //             Container(
+  //               height: double.infinity,
+  //               width: double.infinity,
+  //               decoration: BoxDecoration(
+  //                 image: DecorationImage(
+  //                   image: AssetImage("assets/images/tlo.jpeg"),
+  //                   fit: BoxFit.cover,
+  //                 ),
+  //               ),
+  //             ),
+  //             Container(
+  //               height: double.infinity,
+  //               child: SingleChildScrollView(
+  //                 physics: AlwaysScrollableScrollPhysics(),
+  //                 padding: EdgeInsets.symmetric(
+  //                   horizontal: 40.0,
+  //                   vertical: 120.0,
+  //                 ),
+  //                 child: Column(
+  //                   mainAxisAlignment: MainAxisAlignment.center,
+  //                   children: <Widget>[
+  //                     _widgetOptions.elementAt(_selectedIndex),
+  //                     SizedBox(height: 30.0),
+  //                     _selectScreen(),
+  //                   ],
+  //                 ),
+
+  //               ),
+  //             )
+  //           ],
+  //         ),
+  //       ),
+  //     ),
+  //     bottomNavigationBar: BottomNavigationBar(
+  //       items: const <BottomNavigationBarItem>[
+  //         BottomNavigationBarItem(
+  //           icon: Icon(Icons.home),
+  //           label: 'Ogłoszenie',
+  //         ),
+  //         BottomNavigationBarItem(
+  //           icon: Icon(Icons.calendar_today),
+  //           label: 'Kalendarz',
+  //         ),
+  //         BottomNavigationBarItem(
+  //           icon: Icon(Icons.favorite),
+  //           label: 'Ulubione',
+  //         ),
+  //         BottomNavigationBarItem(
+  //           icon: Icon(Icons.shopping_cart),
+  //           label: 'Koszyk',
+  //         ),
+  //       ],
+  //       currentIndex: _selectedIndex,
+  //       iconSize: 30,
+  //       unselectedItemColor: Color(0xFF3B3A3A),
+  //       selectedItemColor: Color(0xFFECB6B6),
+  //       onTap: _onItemTapped,
+  //     ),
+  //     appBar: AppBar(
+  //       title: Text('Korepetycje'),
+  //       backgroundColor: Color(0xFFECB6B6),
+  //       elevation: 0.0,
+  //       actions: <Widget>[
+  //         FlatButton.icon(
+  //           icon: Icon(Icons.person),
+  //           label:  Text('logout'),
+  //           onPressed: () async{
+  //             await _auth.signOut(); //tu trzeba dać mozliwość edycji profilu
+  //           },
+  //         )
+  //       ],
+  //     ),
+  //   );
+  // }
 }
