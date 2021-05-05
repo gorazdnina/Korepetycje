@@ -5,10 +5,16 @@ import 'package:flutter_app2/services/database.dart';
 class AuthService{
 
   final FirebaseAuth _auth = FirebaseAuth.instance;
-
+  Userr us = null;
   //create user obj base on FirebaseUser
   Userr _userFromFireBaseUser(User user){
-    return user!=null ? Userr(uid: user.uid) :null;
+    return user!=null ? us=Userr(uid: user.uid) : us=null;
+  }
+
+  String get getUs{
+    if(us!=null)
+      return us.getUid();
+    return null;
   }
 
   //auth change user stream

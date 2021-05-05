@@ -1,13 +1,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_app2/models/useerr.dart';
+import 'package:flutter_app2/models/userr.dart';
 
 class DataBaseService{
 
   final String uid;
   DataBaseService({this.uid});
   final CollectionReference brewCollection = FirebaseFirestore.instance.collection('users');
-  final DocumentReference userdata = FirebaseFirestore.instance.collection('users').doc(FirebaseAuth.instance.currentUser.uid);
 
   Future updateUserData(String name, String phone, String email) async{
     return await brewCollection.doc(uid).set({
@@ -29,6 +29,21 @@ class DataBaseService{
 
   Stream<List<Useerr>> get brews {
     return brewCollection.snapshots().map(_userListFromSnapshot);
+  }
+
+  // get user doc stream
+  Stream<UserData> get userData{
+    return brewCollection.doc(uid).snapshots().map(_userDataFromSnapshot);
+  }
+
+  //userdata from snapchot
+  UserData _userDataFromSnapshot(DocumentSnapshot snapshot){
+    return UserData(
+      uid: uid,
+      name: snapshot.data()['name'],
+      email: snapshot.data()['email'],
+      phone: snapshot.data()['phone']
+    );
   }
 
 }

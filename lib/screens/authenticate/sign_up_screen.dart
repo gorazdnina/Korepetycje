@@ -5,6 +5,7 @@ import 'package:flutter_app2/services/auth.dart';
 import 'package:flutter_app2/utilities/constants.dart';
 import 'package:flutter_app2/screens/authenticate/login_screen.dart';
 import 'package:flutter_app2/utilities/loading.dart';
+import 'package:flutter_app2/utilities/validators.dart';
 
 class SignUpScreen extends StatefulWidget {
   final Function toogleView;
@@ -342,20 +343,20 @@ class _SignUpScreenState extends State<SignUpScreen>{
 
 
 
-extension EmailValidator on String {
-  bool isValidEmail() {
-    return RegExp(
-            r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$')
-        .hasMatch(this);
-  }
-}
+// extension EmailValidator on String {
+//   bool isValidEmail() {
+//     return RegExp(
+//             r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$')
+//         .hasMatch(this);
+//   }
+// }
 
-extension PhoneVlaidator on String {
-  bool isPhoneValid(){
-    return RegExp(
-      r'(^(?:[+0]9)?[0-9]{9,12}$)').hasMatch(this);
-  }
-}
+// extension PhoneVlaidator on String {
+//   bool isPhoneValid(){
+//     return RegExp(
+//       r'(^(?:[+0]9)?[0-9]{9,12}$)').hasMatch(this);
+//   }
+// }
 
 
 /*

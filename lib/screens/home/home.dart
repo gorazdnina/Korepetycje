@@ -2,6 +2,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_app2/models/useerr.dart';
+import 'package:flutter_app2/models/userr.dart';
+import 'package:flutter_app2/screens/home/appbar.dart';
+import 'package:flutter_app2/screens/home/settings.dart';
 import 'package:flutter_app2/services/auth.dart';
 import 'package:flutter_app2/utilities/constants.dart';
 import 'package:flutter_app2/screens/authenticate/sign_up_screen.dart';
@@ -224,10 +227,47 @@ class _HomeState extends State<Home>{
     );
   }
 
+    Future<String> getUserName()async{
+      FirebaseFirestore.instance
+          .collection('users')
+          .doc(_auth.getUs)
+          .get()
+          .then((DocumentSnapshot documentSnapshot) {
+            if (documentSnapshot.exists) {
+              return 'Document data: ${documentSnapshot.data()}';
+              //print('Document data: ${documentSnapshot.data()}');
+            } else {
+              return "Document does not exist on the database";
+              //print('Document does not exist on the database');
+            }
+          });
+      }
+
  @override
   Widget build(BuildContext context){
+
+
+    final user = Provider.of<Userr>(context);
+
+    void _showSettingsPanel(){
+      showModalBottomSheet(
+        context: context,
+        builder: (context){
+          return Container(
+            //  alignment: Alignment.center,
+            // width: double.infinity,
+            // height: double.infinity,
+            // padding: EdgeInsets.symmetric(vertical: 30,horizontal: 60),
+            // child: SingleChildScrollView(child:SettingsForm()));
+            padding: EdgeInsets.symmetric(vertical: 20,horizontal: 60),
+            child: SettingsForm(),
+          );
+        }
+      );
+    }
     return StreamProvider<List<Useerr>>.value(
     value: DataBaseService().brews,
+    initialData: [],
     child: Scaffold(
       body: AnnotatedRegion<SystemUiOverlayStyle>(
         value: SystemUiOverlayStyle.light,
@@ -297,22 +337,16 @@ class _HomeState extends State<Home>{
       // ),
       // 
       ),////////jak cos dac koma
-      appBar: AppBar(
-        title: Text('Korepetycje'),
-        backgroundColor: Color(0xFFECB6B6),
-        elevation: 0.0,
-        actions: <Widget>[
-          FlatButton.icon(
-            icon: Icon(Icons.person),
-            label:  Text('logout'),
-            onPressed: () async{
-              await _auth.signOut(); //tu trzeba dać mozliwość edycji profilu
-            },
-          )
-        ],
-      ),
+      appBar: BaseAppBar(
+          title: Text('title'),
+          appBar: AppBar(),
+          widgets: <Widget>[Icon(Icons.more_vert)],
+        ),
     ),
     );
+
+
+    
   }
 
 
