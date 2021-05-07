@@ -38,6 +38,8 @@ class AuthService{
   try{
     UserCredential result = await _auth.signInWithEmailAndPassword(email: email, password: password);
     User user = result.user;
+    //await DataBaseService(uid: user.uid).updateLesonList("Chemia", "ucz sie razem z nami", 20, "Chemia");
+    //await DataBaseService(uid: user.uid).updateLesonList("matma", "ucz sie razem z nami", 30, "Matematyka");
     return _userFromFireBaseUser(user);
   }catch(e){
     print(e.toString());

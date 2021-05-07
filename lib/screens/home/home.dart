@@ -1,9 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_app2/models/lessons.dart';
 import 'package:flutter_app2/models/useerr.dart';
 import 'package:flutter_app2/models/userr.dart';
 import 'package:flutter_app2/screens/home/appbar.dart';
+import 'package:flutter_app2/screens/home/lessonl_ist.dart';
 import 'package:flutter_app2/screens/home/settings.dart';
 import 'package:flutter_app2/services/auth.dart';
 import 'package:flutter_app2/utilities/constants.dart';
@@ -19,19 +21,6 @@ import 'package:provider/provider.dart';
 import 'brews_list.dart';
 
 
-// class Home extends StatelessWidget{
-//   final AuthService _auth = AuthService();
-//   @override
-//   Widget build(BuildContext context){
-//     return StreamProvider<QuerySnapshot>.value(
-//       child: Scaffold(
-
-//       ),
-//     );
-//   }
-// }
-
-
 class Home extends StatefulWidget{
   @override
   _HomeState createState() => _HomeState();
@@ -40,6 +29,7 @@ class Home extends StatefulWidget{
 class _HomeState extends State<Home>{
 
   final AuthService _auth = AuthService();
+  String category = "Wszystko";
 
   int _selectedIndex = 0;
   static const TextStyle optionStyle = TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
@@ -98,15 +88,38 @@ class _HomeState extends State<Home>{
 
   String dropdownValue = 'Wszystko';
   Widget _menuScreen() {
-    return Column(
-      children: <Widget>[
-        Text(
-            "Wybierz kategorie: "
-        ),
-        _dropDownCategory(),
+    // return Column(
+    //   children: <Widget>[
+    //     Text(
+    //         "Wybierz kategorie: "
+    //     ),
+    //     _dropDownCategory(),
 
-      ],
-    );
+      return Container(
+      
+        child: Column(children:<Widget> [
+          _dropDownCategory(),
+          Expanded(
+            child:LesonList(),
+            ),
+        ],),
+      );
+        // return StreamProvider<List<Lesons>>.value(
+        // value: DataBaseService().lesonsCat("wszystkie"),
+        // initialData: [],
+        // child: LesonList(),
+        // child: Column(
+        // children: <Widget>[
+        //   Text(
+        //       "Wybierz kategorie: "
+        //   ),
+        //  // _dropDownCategory(),
+        //   LesonList()
+        // ],
+        //),
+        //);
+      //],
+    //);
   }
 
   Widget _dropDownCategory(){
@@ -123,6 +136,7 @@ class _HomeState extends State<Home>{
       onChanged: (String newValue) {
         setState(() {
           dropdownValue = newValue;
+          category = dropdownValue;
         });
       },
       items: <String>['Wszystko', 'Matematyka', 'Polski', 'Angielski', 'Fizyka', 'Chemia', 'Inne']
@@ -132,6 +146,13 @@ class _HomeState extends State<Home>{
           child: Text(value),
         );
       }).toList(),
+      // items: <String>['Wszystko', 'Matematyka', 'Polski', 'Angielski', 'Fizyka', 'Chemia', 'Inne']
+      //     .map<DropdownMenuItem<String>>((String value) {
+      //   return DropdownMenuItem<String>(
+      //     value: value,
+      //     child: Text(value),
+      //   );
+      // }).toList(),
     );
   }
 
@@ -192,13 +213,55 @@ class _HomeState extends State<Home>{
     else return _calendarScreen();
   }
 
-  Widget _menuMainScreen() {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('BottomNavigationBar Sample'),
-      ),
-      body: Center(
-        child: _widgetOptions.elementAt(_selectedIndex),
+ @override
+  Widget build(BuildContext context){
+
+
+    final user = Provider.of<Userr>(context);
+
+    return StreamProvider<List<Lesons>>.value(
+    value: DataBaseService().lesonsCat(category),
+    initialData: [],
+    child: Scaffold(
+      body: AnnotatedRegion<SystemUiOverlayStyle>(
+        value: SystemUiOverlayStyle.light,
+        child: GestureDetector(
+          onTap: () => FocusScope.of(context).unfocus(),
+          child: Stack(
+            children: <Widget>[
+              Container(
+                height: double.infinity,
+                width: double.infinity,
+                decoration: BoxDecoration(
+                  image: DecorationImage(
+                    image: AssetImage("assets/images/tlo.jpeg"),
+                    fit: BoxFit.cover,
+                  ),
+                ),
+              ),
+              _selectScreen(),
+              // Container(
+              //   height: double.infinity,
+              //   child: SingleChildScrollView(
+              //     physics: AlwaysScrollableScrollPhysics(),
+              //     padding: EdgeInsets.symmetric(
+              //       horizontal: 40.0,
+              //       vertical: 120.0,
+              //     ),
+              //     child: Column(
+              //       mainAxisAlignment: MainAxisAlignment.center,
+              //       children: <Widget>[
+              //         _widgetOptions.elementAt(_selectedIndex),
+              //         SizedBox(height: 30.0),
+              //         _selectScreen(),
+              //       ],
+              //     ),
+
+              //   ),
+              // )
+           ],
+          ),
+        ),
       ),
       bottomNavigationBar: BottomNavigationBar(
         items: const <BottomNavigationBarItem>[
@@ -220,123 +283,13 @@ class _HomeState extends State<Home>{
           ),
         ],
         currentIndex: _selectedIndex,
+        iconSize: 30,
         unselectedItemColor: Color(0xFF3B3A3A),
         selectedItemColor: Color(0xFFECB6B6),
         onTap: _onItemTapped,
       ),
-    );
-  }
-
-    Future<String> getUserName()async{
-      FirebaseFirestore.instance
-          .collection('users')
-          .doc(_auth.getUs)
-          .get()
-          .then((DocumentSnapshot documentSnapshot) {
-            if (documentSnapshot.exists) {
-              return 'Document data: ${documentSnapshot.data()}';
-              //print('Document data: ${documentSnapshot.data()}');
-            } else {
-              return "Document does not exist on the database";
-              //print('Document does not exist on the database');
-            }
-          });
-      }
-
- @override
-  Widget build(BuildContext context){
-
-
-    final user = Provider.of<Userr>(context);
-
-    void _showSettingsPanel(){
-      showModalBottomSheet(
-        context: context,
-        builder: (context){
-          return Container(
-            //  alignment: Alignment.center,
-            // width: double.infinity,
-            // height: double.infinity,
-            // padding: EdgeInsets.symmetric(vertical: 30,horizontal: 60),
-            // child: SingleChildScrollView(child:SettingsForm()));
-            padding: EdgeInsets.symmetric(vertical: 20,horizontal: 60),
-            child: SettingsForm(),
-          );
-        }
-      );
-    }
-    return StreamProvider<List<Useerr>>.value(
-    value: DataBaseService().brews,
-    initialData: [],
-    child: Scaffold(
-      body: AnnotatedRegion<SystemUiOverlayStyle>(
-        value: SystemUiOverlayStyle.light,
-        child: BrewList(),
-      //   value: SystemUiOverlayStyle.light,
-      //   child: GestureDetector(
-      //     onTap: () => FocusScope.of(context).unfocus(),
-      //     child: Stack(
-      //       children: <Widget>[
-      //         Container(
-      //           height: double.infinity,
-      //           width: double.infinity,
-      //           decoration: BoxDecoration(
-      //             image: DecorationImage(
-      //               image: AssetImage("assets/images/tlo.jpeg"),
-      //               fit: BoxFit.cover,
-      //             ),
-      //           ),
-      //         ),
-      //         Container(
-      //           height: double.infinity,
-      //           child: SingleChildScrollView(
-      //             physics: AlwaysScrollableScrollPhysics(),
-      //             padding: EdgeInsets.symmetric(
-      //               horizontal: 40.0,
-      //               vertical: 120.0,
-      //             ),
-      //             child: Column(
-      //               mainAxisAlignment: MainAxisAlignment.center,
-      //               children: <Widget>[
-      //                 _widgetOptions.elementAt(_selectedIndex),
-      //                 SizedBox(height: 30.0),
-      //                 _selectScreen(),
-      //               ],
-      //             ),
-
-      //           ),
-      //         )
-      //       ],
-      //     ),
-      //   ),
-      // ),
-      // bottomNavigationBar: BottomNavigationBar(
-      //   items: const <BottomNavigationBarItem>[
-      //     BottomNavigationBarItem(
-      //       icon: Icon(Icons.home),
-      //       label: 'Ogłoszenie',
-      //     ),
-      //     BottomNavigationBarItem(
-      //       icon: Icon(Icons.calendar_today),
-      //       label: 'Kalendarz',
-      //     ),
-      //     BottomNavigationBarItem(
-      //       icon: Icon(Icons.favorite),
-      //       label: 'Ulubione',
-      //     ),
-      //     BottomNavigationBarItem(
-      //       icon: Icon(Icons.shopping_cart),
-      //       label: 'Koszyk',
-      //     ),
-      //   ],
-      //   currentIndex: _selectedIndex,
-      //   iconSize: 30,
-      //   unselectedItemColor: Color(0xFF3B3A3A),
-      //   selectedItemColor: Color(0xFFECB6B6),
-      //   onTap: _onItemTapped,
-      // ),
-      // 
-      ),////////jak cos dac koma
+      
+     // ),////////jak cos dac koma
       appBar: BaseAppBar(
           title: Text('title'),
           appBar: AppBar(),
