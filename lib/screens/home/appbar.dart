@@ -55,6 +55,7 @@ class BaseAppBar extends StatelessWidget implements PreferredSizeWidget {
             label: Text('settings'),
             onPressed: ()=> _showSettingsPanel(),
           ),
+          
         ],
     );
     }else{

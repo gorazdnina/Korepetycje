@@ -89,15 +89,7 @@ class _HomeState extends State<Home>{
 
   String dropdownValue = 'Wszystko';
   Widget _menuScreen() {
-    // return Column(
-    //   children: <Widget>[
-    //     Text(
-    //         "Wybierz kategorie: "
-    //     ),
-    //     _dropDownCategory(),
-
       return Container(
-      
         child: Column(children:<Widget> [
           _dropDownCategory(),
           Expanded(
@@ -105,22 +97,6 @@ class _HomeState extends State<Home>{
             ),
         ],),
       );
-        // return StreamProvider<List<Lesons>>.value(
-        // value: DataBaseService().lesonsCat("wszystkie"),
-        // initialData: [],
-        // child: LesonList(),
-        // child: Column(
-        // children: <Widget>[
-        //   Text(
-        //       "Wybierz kategorie: "
-        //   ),
-        //  // _dropDownCategory(),
-        //   LesonList()
-        // ],
-        //),
-        //);
-      //],
-    //);
   }
 
   Widget _dropDownCategory(){
@@ -179,42 +155,8 @@ class _HomeState extends State<Home>{
         ),
       );
     }
-);
-  }
-
-  // Widget _dropDownCategory(){
-  //   return DropdownButton<String>(
-  //     value: dropdownValue,
-  //     icon: const Icon(Icons.arrow_downward),
-  //     iconSize: 24,
-  //     elevation: 16,
-  //     style: const TextStyle(color: Color(0xFF212121)),
-  //     underline: Container(
-  //       height: 2,
-  //       color: Color(0xFFECB6B6),
-  //     ),
-  //     onChanged: (String newValue) {
-  //       setState(() {
-  //         dropdownValue = newValue;
-  //         category = dropdownValue;
-  //       });
-  //     },
-  //     items: <String>['Wszystko', 'Matematyka', 'Polski', 'Angielski', 'Fizyka', 'Chemia', 'Inne']
-  //         .map<DropdownMenuItem<String>>((String value) {
-  //       return DropdownMenuItem<String>(
-  //         value: value,
-  //         child: Text(value),
-  //       );
-  //     }).toList(),
-  //     // items: <String>['Wszystko', 'Matematyka', 'Polski', 'Angielski', 'Fizyka', 'Chemia', 'Inne']
-  //     //     .map<DropdownMenuItem<String>>((String value) {
-  //     //   return DropdownMenuItem<String>(
-  //     //     value: value,
-  //     //     child: Text(value),
-  //     //   );
-  //     // }).toList(),
-  //   );
-  // }
+  );
+}
 
   Widget _calendarScreen() {
     return Container(
@@ -300,25 +242,6 @@ class _HomeState extends State<Home>{
                 ),
               ),
               _selectScreen(),
-              // Container(
-              //   height: double.infinity,
-              //   child: SingleChildScrollView(
-              //     physics: AlwaysScrollableScrollPhysics(),
-              //     padding: EdgeInsets.symmetric(
-              //       horizontal: 40.0,
-              //       vertical: 120.0,
-              //     ),
-              //     child: Column(
-              //       mainAxisAlignment: MainAxisAlignment.center,
-              //       children: <Widget>[
-              //         _widgetOptions.elementAt(_selectedIndex),
-              //         SizedBox(height: 30.0),
-              //         _selectScreen(),
-              //       ],
-              //     ),
-
-              //   ),
-              // )
            ],
           ),
         ),

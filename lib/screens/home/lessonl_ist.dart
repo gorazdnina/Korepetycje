@@ -1,11 +1,11 @@
 
-
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app2/models/lessons.dart';
 import 'package:flutter_app2/models/useerr.dart';
+import 'package:flutter_app2/screens/home/detailpage.dart';
 import 'package:provider/provider.dart';
+import 'package:path/path.dart';
 
 import 'brew_tile.dart';
 
@@ -47,6 +47,10 @@ class LesonTitle  extends StatelessWidget {
           ),
           title: Text(lesons.name),
           subtitle: Text("Cena: ${lesons.price.toString()}zł"),
+          onTap: (){
+             return Navigator.push(context,MaterialPageRoute(builder: (context) => DetailPage(leson: lesons,)));
+             //print("udalo sie");
+          }
         ),
       ), 
     );
