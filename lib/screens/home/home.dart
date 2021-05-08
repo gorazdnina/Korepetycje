@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_app2/models/lessons.dart';
@@ -123,38 +124,97 @@ class _HomeState extends State<Home>{
   }
 
   Widget _dropDownCategory(){
-    return DropdownButton<String>(
-      value: dropdownValue,
-      icon: const Icon(Icons.arrow_downward),
-      iconSize: 24,
-      elevation: 16,
-      style: const TextStyle(color: Color(0xFF212121)),
-      underline: Container(
-        height: 2,
-        color: Color(0xFFECB6B6),
-      ),
-      onChanged: (String newValue) {
-        setState(() {
-          dropdownValue = newValue;
-          category = dropdownValue;
-        });
-      },
-      items: <String>['Wszystko', 'Matematyka', 'Polski', 'Angielski', 'Fizyka', 'Chemia', 'Inne']
-          .map<DropdownMenuItem<String>>((String value) {
-        return DropdownMenuItem<String>(
-          value: value,
-          child: Text(value),
-        );
-      }).toList(),
-      // items: <String>['Wszystko', 'Matematyka', 'Polski', 'Angielski', 'Fizyka', 'Chemia', 'Inne']
-      //     .map<DropdownMenuItem<String>>((String value) {
-      //   return DropdownMenuItem<String>(
-      //     value: value,
-      //     child: Text(value),
-      //   );
-      // }).toList(),
-    );
+    return StreamBuilder<QuerySnapshot>(
+    stream: FirebaseFirestore.instance.collection('category').snapshots(),
+    builder: (context, snapshot){
+      if (!snapshot.hasData) return const Center(
+        child: const CupertinoActivityIndicator(),
+      );
+      return new Container(
+       // padding: EdgeInsets.only(bottom: 16.0),
+        child: new Row(
+          children: <Widget>[
+            new Expanded(
+                flex: 2,
+                child: new Container(
+                  padding: EdgeInsets.fromLTRB(17.0,10.0,10.0,10.0),
+                  child: new Text("Category"),
+                )
+            ),
+            new Expanded(
+              flex: 3,
+              child:new InputDecorator(
+                decoration: const InputDecoration(
+                  hintText: 'Choose an category',
+                  hintStyle: TextStyle(
+                    fontSize: 16.0,
+                    fontFamily: "OpenSans",
+                    fontWeight: FontWeight.normal,
+                  ),
+                ),
+                isEmpty: category == null,
+                child: new DropdownButton(
+                  value: category,
+                  isDense: true,
+                  onChanged: (String newValue) {
+                    setState(() {
+                      category = newValue;
+                      dropdownValue =newValue;
+                    });
+                  },
+                  items: snapshot.data.docs.map((DocumentSnapshot document) {
+                    return new DropdownMenuItem<String>(
+                        value: document.data()['category_name'],
+                        child: new Container(
+                          height: 30.0,
+                          padding: EdgeInsets.fromLTRB(10.0, 2.0, 10.0, 0.0),
+                          child: new Text(document.data()['category_name']),
+                        )
+                    );
+                  }).toList(),
+                ),
+              ),
+            ),
+          ],
+        ),
+      );
+    }
+);
   }
+
+  // Widget _dropDownCategory(){
+  //   return DropdownButton<String>(
+  //     value: dropdownValue,
+  //     icon: const Icon(Icons.arrow_downward),
+  //     iconSize: 24,
+  //     elevation: 16,
+  //     style: const TextStyle(color: Color(0xFF212121)),
+  //     underline: Container(
+  //       height: 2,
+  //       color: Color(0xFFECB6B6),
+  //     ),
+  //     onChanged: (String newValue) {
+  //       setState(() {
+  //         dropdownValue = newValue;
+  //         category = dropdownValue;
+  //       });
+  //     },
+  //     items: <String>['Wszystko', 'Matematyka', 'Polski', 'Angielski', 'Fizyka', 'Chemia', 'Inne']
+  //         .map<DropdownMenuItem<String>>((String value) {
+  //       return DropdownMenuItem<String>(
+  //         value: value,
+  //         child: Text(value),
+  //       );
+  //     }).toList(),
+  //     // items: <String>['Wszystko', 'Matematyka', 'Polski', 'Angielski', 'Fizyka', 'Chemia', 'Inne']
+  //     //     .map<DropdownMenuItem<String>>((String value) {
+  //     //   return DropdownMenuItem<String>(
+  //     //     value: value,
+  //     //     child: Text(value),
+  //     //   );
+  //     // }).toList(),
+  //   );
+  // }
 
   Widget _calendarScreen() {
     return Container(
