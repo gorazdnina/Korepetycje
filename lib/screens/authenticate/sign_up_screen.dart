@@ -90,7 +90,7 @@ class _SignUpScreenState extends State<SignUpScreen>{
                     print(email);
                     print(password);
                     setState(()=> loading = true);
-                    dynamic result = await _auth.registerwithEmailandPassword(email, password, name, phone);
+                   dynamic result = await _auth.registerwithEmailandPassword(email, password, name, phone);
                     if(result == null)
                     {
                       setState((){

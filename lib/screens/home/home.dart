@@ -15,7 +15,7 @@ import 'package:flutter_calendar_carousel/flutter_calendar_carousel.dart';
 import 'package:flutter_calendar_carousel/flutter_calendar_carousel.dart' show CalendarCarousel, EventList;
 import 'package:flutter_calendar_carousel/classes/event.dart';
 import 'package:flutter_calendar_carousel/classes/event_list.dart';
-
+import 'package:flutter_app2/screens/home/cart.dart';
 import 'package:flutter_app2/services/database.dart';
 import 'package:provider/provider.dart';
 
@@ -97,6 +97,17 @@ class _HomeState extends State<Home>{
             ),
         ],),
       );
+  }
+
+  Widget _cartScreen() {
+    return Container(
+      child: Column(children:<Widget> [
+        _dropDownCategory(),
+        Expanded(
+          child:CartPage(),
+        ),
+      ],),
+    );
   }
 
   Widget _dropDownCategory(){
@@ -212,7 +223,8 @@ class _HomeState extends State<Home>{
 
   Widget _selectScreen(){
     if(_selectedIndex == 0) return _menuScreen();
-    else return _calendarScreen();
+    if(_selectedIndex == 3) return _cartScreen();
+      else return _calendarScreen();
   }
 
  @override
@@ -370,3 +382,4 @@ class _HomeState extends State<Home>{
   //   );
   // }
 }
+
