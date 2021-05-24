@@ -102,7 +102,7 @@ class _HomeState extends State<Home>{
   Widget _cartScreen() {
     return Container(
       child: Column(children:<Widget> [
-        _dropDownCategory(),
+
         Expanded(
           child:CartPage(),
         ),

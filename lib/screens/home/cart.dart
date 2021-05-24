@@ -83,7 +83,7 @@ class _CartPageState extends State<CartPage> {
     return Container(
       alignment: Alignment.topLeft,
       child: Text(
-        "SHOPPING CART",
+        "KOSZYK",
         style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
       ),
       margin: EdgeInsets.only(left: 12, top: 12),
@@ -94,7 +94,7 @@ class _CartPageState extends State<CartPage> {
     return Container(
       alignment: Alignment.topLeft,
       child: Text(
-        "Total(num of less) lessons",
+        "Total" +  "cart.length" + "lessons", // attach length of cart table
         style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
       ),
       margin: EdgeInsets.only(left: 12, top: 4),
@@ -105,12 +105,22 @@ class _CartPageState extends State<CartPage> {
     return ListView.builder(
       shrinkWrap: true,
       primary: false,
-      itemBuilder: (context, position) {
-        return createCartListItem();
+      itemCount: 1, //cart.length ?? 0,
+      itemBuilder: (context, index) {
+        return createCartListItem(); //createCartListItem(cart: cart[index]);
       },
-      itemCount: 5,
+
     );
   }
+
+  dropItemFromCart(){
+      print("delete item from cart");
+      //drop item from database
+  }
+
+
+  int count = 1; // do wywalenia
+  int pricePerHour = 30; // do wywalenia
 
   createCartListItem() {
     return Stack(
@@ -143,15 +153,23 @@ class _CartPageState extends State<CartPage> {
                       Container(
                         padding: EdgeInsets.only(right: 8, top: 4),
                         child: Text(
-                          "Nazwa Korypetycji",
+                          "Kategoria",
                           maxLines: 2,
                           softWrap: true,
-                          style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
+                          style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                         ),
                       ),
                       //Utils.getSizedBox(height: 6),
                       Text(
-                        "Kategoria" + "Poziom",
+                        "Poziom",
+                        style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
+                      ),
+                      Text(
+                        "Data: " + "date.fromDatabase",
+                        style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
+                      ),
+                      Text(
+                        "Godzina: " + "hour.fromDatabase",
                         style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
                       ),
                       Container(
@@ -159,7 +177,7 @@ class _CartPageState extends State<CartPage> {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: <Widget>[
                             Text(
-                              "\$299.00",
+                              (pricePerHour*count).toString() + "PLN", //price per hour * count of hour
                               style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
                             ),
                             Padding(
@@ -168,26 +186,41 @@ class _CartPageState extends State<CartPage> {
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 crossAxisAlignment: CrossAxisAlignment.end,
                                 children: <Widget>[
-                                  Icon(
-                                    Icons.remove,
-                                    size: 24,
-                                    color:Color(0xFFECB6B6),
+                                  IconButton(
+                                    icon: const Icon(
+                                      Icons.remove,
+                                      size: 24,
+                                      color:Color(0xFFECB6B6),
+                                    ),
+                                    onPressed: () {
+                                      setState(() {
+                                        count--; //decrease hour of lessons from database
+                                      });
+                                    },
                                   ),
+
                                   Container(
                                     color: Colors.grey.shade200,
                                     padding: const EdgeInsets.only(
-                                        bottom: 2, right: 12, left: 12),
+                                        top: 12, bottom: 12, right: 12, left: 12),
+                                    alignment: Alignment.center,
                                     child: Text(
-                                      "1",
+                                      count.toString(),
                                       style:
-                                      TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
+                                      TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
                                     ),
                                   ),
-                                  Icon(
-                                    Icons.add,
-                                    size: 24,
-                                    color: Color(0xFFECB6B6),
-                                  )
+                                  IconButton(
+                                    icon: const Icon(Icons.add,
+                                        size: 24,
+                                        color: Color(0xFFECB6B6)),
+                                    onPressed: () {
+                                      setState(() {
+                                        count++; //add hour of lessons to database
+                                      });
+                                    },
+                                  ),
+
                                 ],
                               ),
                             )
@@ -209,15 +242,25 @@ class _CartPageState extends State<CartPage> {
             height: 24,
             alignment: Alignment.center,
             margin: EdgeInsets.only(right: 10, top: 8),
-            child: Icon(
-              Icons.close,
-              color: Colors.white,
-              size: 20,
+            child: IconButton(
+              padding: EdgeInsets.only(right: 5, top: 0),
+              icon: const Icon(
+                Icons.close,
+                color: Colors.white,
+                size: 25,
+              ),
+              alignment: Alignment.center,
+              onPressed: () {
+                setState(() {
+                  dropItemFromCart();
+                  //print("delete item from cart"); //delete item from cart in database
+                });
+              },
             ),
             decoration: BoxDecoration(
-                borderRadius: BorderRadius.all(Radius.circular(4)),
-                color: Color(0xFFECB6B6),
-          ),
+              borderRadius: BorderRadius.all(Radius.circular(4)),
+              color: Color(0xFFECB6B6),
+            ),
         )
     )],
     );
