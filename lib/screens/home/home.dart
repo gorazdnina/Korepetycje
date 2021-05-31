@@ -7,6 +7,7 @@ import 'package:flutter_app2/models/useerr.dart';
 import 'package:flutter_app2/models/userr.dart';
 import 'package:flutter_app2/screens/home/appbar.dart';
 import 'package:flutter_app2/screens/home/lessonl_ist.dart';
+import 'package:flutter_app2/screens/home/my_products/products.dart';
 import 'package:flutter_app2/screens/home/settings.dart';
 import 'package:flutter_app2/services/auth.dart';
 import 'package:flutter_app2/utilities/constants.dart';
@@ -30,28 +31,10 @@ class Home extends StatefulWidget{
 class _HomeState extends State<Home>{
 
   final AuthService _auth = AuthService();
+  final DataBaseService _db = DataBaseService();
   String category = "Wszystko";
 
   int _selectedIndex = 0;
-  static const TextStyle optionStyle = TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
-  static const List<Widget> _widgetOptions = <Widget>[
-    Text(
-      'Korepetycje',
-      style: optionStyle,
-    ),
-    Text(
-      'Kalendarz',
-      style: optionStyle,
-    ),
-    Text(
-      'Ulubione',
-      style: optionStyle,
-    ),
-    Text(
-      'Koszyk',
-      style: optionStyle,
-    ),
-  ];
 
   //tu chyba baze danych trzeba
   EventList<Event> _markedDateMap = new EventList<Event>(
@@ -102,11 +85,25 @@ class _HomeState extends State<Home>{
   Widget _cartScreen() {
     return Container(
       child: Column(children:<Widget> [
-
         Expanded(
           child:CartPage(),
         ),
       ],),
+    );
+  }
+
+  Widget _myProducts(BuildContext context){
+    return MultiProvider(
+      providers: [
+        // ChangeNotifierProvider<ProductProvider>(create: (context)=> ProductProvider()),
+        StreamProvider<List<Product>>.value(value: _db.getProducts(), initialData: []),
+      ],
+      child: Column(children:<Widget> [
+         Expanded(
+           child:Products(),
+        ),
+      ],
+    ),
     );
   }
 
@@ -118,7 +115,6 @@ class _HomeState extends State<Home>{
         child: const CupertinoActivityIndicator(),
       );
       return new Container(
-       // padding: EdgeInsets.only(bottom: 16.0),
         child: new Row(
           children: <Widget>[
             new Expanded(
@@ -221,8 +217,9 @@ class _HomeState extends State<Home>{
     );
   }
 
-  Widget _selectScreen(){
-    if(_selectedIndex == 0) return _menuScreen();
+  Widget _selectScreen(BuildContext context){
+    if(_selectedIndex == 0) return _menuScreen(); 
+    if(_selectedIndex == 2) return _myProducts(context);
     if(_selectedIndex == 3) return _cartScreen();
       else return _calendarScreen();
   }
@@ -232,9 +229,10 @@ class _HomeState extends State<Home>{
 
 
     final user = Provider.of<Userr>(context);
-
-    return StreamProvider<List<Lesons>>.value(
-    value: DataBaseService().lesonsCat(category),
+    return StreamProvider<List<Product>>.value(
+    //return StreamProvider<List<Lesons>>.value(
+    //value: _db.lesonsCat(category),
+    value: _db.productCat(category),
     initialData: [],
     child: Scaffold(
       body: AnnotatedRegion<SystemUiOverlayStyle>(
@@ -253,7 +251,7 @@ class _HomeState extends State<Home>{
                   ),
                 ),
               ),
-              _selectScreen(),
+              _selectScreen(context),
            ],
           ),
         ),
@@ -270,7 +268,7 @@ class _HomeState extends State<Home>{
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.favorite),
-            label: 'Ulubione',
+            label: 'Moje',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.shopping_cart),
@@ -292,94 +290,6 @@ class _HomeState extends State<Home>{
         ),
     ),
     );
-
-
-    
   }
-
-
-  // @override
-  // Widget build(BuildContext context){
-  //   return Scaffold(
-  //     body: AnnotatedRegion<SystemUiOverlayStyle>(
-  //       value: SystemUiOverlayStyle.light,
-  //       child: GestureDetector(
-  //         onTap: () => FocusScope.of(context).unfocus(),
-  //         child: Stack(
-  //           children: <Widget>[
-  //             Container(
-  //               height: double.infinity,
-  //               width: double.infinity,
-  //               decoration: BoxDecoration(
-  //                 image: DecorationImage(
-  //                   image: AssetImage("assets/images/tlo.jpeg"),
-  //                   fit: BoxFit.cover,
-  //                 ),
-  //               ),
-  //             ),
-  //             Container(
-  //               height: double.infinity,
-  //               child: SingleChildScrollView(
-  //                 physics: AlwaysScrollableScrollPhysics(),
-  //                 padding: EdgeInsets.symmetric(
-  //                   horizontal: 40.0,
-  //                   vertical: 120.0,
-  //                 ),
-  //                 child: Column(
-  //                   mainAxisAlignment: MainAxisAlignment.center,
-  //                   children: <Widget>[
-  //                     _widgetOptions.elementAt(_selectedIndex),
-  //                     SizedBox(height: 30.0),
-  //                     _selectScreen(),
-  //                   ],
-  //                 ),
-
-  //               ),
-  //             )
-  //           ],
-  //         ),
-  //       ),
-  //     ),
-  //     bottomNavigationBar: BottomNavigationBar(
-  //       items: const <BottomNavigationBarItem>[
-  //         BottomNavigationBarItem(
-  //           icon: Icon(Icons.home),
-  //           label: 'Ogłoszenie',
-  //         ),
-  //         BottomNavigationBarItem(
-  //           icon: Icon(Icons.calendar_today),
-  //           label: 'Kalendarz',
-  //         ),
-  //         BottomNavigationBarItem(
-  //           icon: Icon(Icons.favorite),
-  //           label: 'Ulubione',
-  //         ),
-  //         BottomNavigationBarItem(
-  //           icon: Icon(Icons.shopping_cart),
-  //           label: 'Koszyk',
-  //         ),
-  //       ],
-  //       currentIndex: _selectedIndex,
-  //       iconSize: 30,
-  //       unselectedItemColor: Color(0xFF3B3A3A),
-  //       selectedItemColor: Color(0xFFECB6B6),
-  //       onTap: _onItemTapped,
-  //     ),
-  //     appBar: AppBar(
-  //       title: Text('Korepetycje'),
-  //       backgroundColor: Color(0xFFECB6B6),
-  //       elevation: 0.0,
-  //       actions: <Widget>[
-  //         FlatButton.icon(
-  //           icon: Icon(Icons.person),
-  //           label:  Text('logout'),
-  //           onPressed: () async{
-  //             await _auth.signOut(); //tu trzeba dać mozliwość edycji profilu
-  //           },
-  //         )
-  //       ],
-  //     ),
-  //   );
-  // }
 }
 

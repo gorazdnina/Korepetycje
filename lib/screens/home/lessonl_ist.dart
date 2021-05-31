@@ -17,22 +17,31 @@ class LesonList extends StatefulWidget{
 class _LesonListState extends State<LesonList>{
   @override 
   Widget build(BuildContext context){
-    
-    final lesons = Provider.of<List<Lesons>>(context);
+
+    final products = Provider.of<List<Product>>(context);
 
     return ListView.builder(
-      itemCount: lesons.length ?? 0,
+      itemCount: products.length ?? 0,
       itemBuilder: (context,index){
-        return LesonTitle(lesons: lesons[index]);
+        return LesonTitle(product: products[index]);
       },
     );
+    
+    // final lesons = Provider.of<List<Lesons>>(context);
+
+    // return ListView.builder(
+    //   itemCount: lesons.length ?? 0,
+    //   itemBuilder: (context,index){
+    //     return LesonTitle(lesons: lesons[index]);
+    //   },
+    // );
   }
 }
 
 class LesonTitle  extends StatelessWidget {
 
-  final Lesons lesons;
-  LesonTitle({this.lesons});
+    final Product product;
+  LesonTitle({this.product});
 
   @override
   Widget build(BuildContext context) {
@@ -45,14 +54,37 @@ class LesonTitle  extends StatelessWidget {
             radius: 25,
             backgroundColor: Colors.pink[100],
           ),
-          title: Text(lesons.name),
-          subtitle: Text("Cena: ${lesons.price.toString()}zł"),
+          title: Text(product.name),
+          subtitle: Text("Cena: ${product.price.toString()}zł"),
           onTap: (){
-             return Navigator.push(context,MaterialPageRoute(builder: (context) => DetailPage(leson: lesons,)));
-             //print("udalo sie");
+             return Navigator.push(context,MaterialPageRoute(builder: (context) => DetailPage(product: product,)));
           }
         ),
       ), 
     );
   }
+
+  // final Lesons lesons;
+  // LesonTitle({this.lesons});
+
+  // @override
+  // Widget build(BuildContext context) {
+  //   return Padding(
+  //     padding: EdgeInsets.only(top: 8.0),
+  //     child: Card(
+  //       margin: EdgeInsets.fromLTRB(20, 6, 20, 0),
+  //       child: ListTile(
+  //         leading: CircleAvatar(
+  //           radius: 25,
+  //           backgroundColor: Colors.pink[100],
+  //         ),
+  //         title: Text(lesons.name),
+  //         subtitle: Text("Cena: ${lesons.price.toString()}zł"),
+  //         onTap: (){
+  //            return Navigator.push(context,MaterialPageRoute(builder: (context) => DetailPage(leson: lesons,)));
+  //         }
+  //       ),
+  //     ), 
+  //   );
+  // }
 }

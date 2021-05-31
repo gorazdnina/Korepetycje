@@ -12,6 +12,7 @@ class DataBaseService{
   final CollectionReference brewCollection = FirebaseFirestore.instance.collection('users');
   final CollectionReference lessonsCollection = FirebaseFirestore.instance.collection('lessons');
   final CollectionReference categoryCollection = FirebaseFirestore.instance.collection('category');
+  final CollectionReference productCollection = FirebaseFirestore.instance.collection('Product');
 
 
   Future updateUserData(String name, String phone, String email) async{
@@ -52,36 +53,36 @@ class DataBaseService{
   }
 
   ////For lessons features /////
-  List<Lesons> _lessonListFromSnapshot(QuerySnapshot snapshot){
-    return snapshot.docs.map((doc){
-      return Lesons(
-        name: doc.data()['name'] ?? '',
-        descryption: doc.data()['description'] ?? '',
-        price: doc.data()['price'] ?? 0 ,
-        category: doc.data()['category'] ?? '',
-      );
-    }).toList();
-  }
+//   List<Lesons> _lessonListFromSnapshot(QuerySnapshot snapshot){
+//     return snapshot.docs.map((doc){
+//       return Lesons(
+//         name: doc.data()['name'] ?? '',
+//         descryption: doc.data()['description'] ?? '',
+//         price: doc.data()['price'] ?? 0 ,
+//         category: doc.data()['category'] ?? '',
+//       );
+//     }).toList();
+//   }
 
- Stream<List<Lesons>> get lesons {
-    return lessonsCollection.snapshots().map(_lessonListFromSnapshot);
-  }
+//  Stream<List<Lesons>> get lesons {
+//     return lessonsCollection.snapshots().map(_lessonListFromSnapshot);
+//   }
 
-  Stream<List<Lesons>> lesonsCat(String cat){
-    final Query mylist = lessonsCollection.where("category", isEqualTo: cat);
-    if(cat == "Wszystko")
-      return lesons;
-    return mylist.snapshots().map(_lessonListFromSnapshot);
-  }
+//   Stream<List<Lesons>> lesonsCat(String cat){
+//     final Query mylist = lessonsCollection.where("category", isEqualTo: cat);
+//     if(cat == "Wszystko")
+//       return lesons;
+//     return mylist.snapshots().map(_lessonListFromSnapshot);
+//   }
 
-  Future updateLesonList(String name, String description, double price, String category) async{
-    return await lessonsCollection.doc().set({
-      'name' : name,
-      'description' : description,
-      'price' : price,
-      'category' : category,
-    });
-  }
+//   Future updateLesonList(String name, String description, double price, String category) async{
+//     return await lessonsCollection.doc().set({
+//       'name' : name,
+//       'description' : description,
+//       'price' : price,
+//       'category' : category,
+//     });
+//   }
   ////END LESSONS////
   ///
   ////For lessons features /////
@@ -97,4 +98,28 @@ class DataBaseService{
     }).toList();
   }
   ////END CATEGORY
+  
+
+
+
+///__PRODUCT__///
+  Future<void> saveProduct(Product product){
+    return productCollection.doc(product.productId).set(product.toMap());
+  }
+
+  Stream<List<Product>> getProducts(){
+    return productCollection.snapshots().map((snapshot) => snapshot.docs.map((document) => Product.fromFirestore(document.data())).toList());
+  }
+
+  Future<void> removeProduct(String productId){
+    return productCollection.doc(productId).delete();
+  }
+
+  Stream<List<Product>> productCat(String cat){
+    final Query mylist = productCollection.where("category", isEqualTo: cat);
+    if(cat == "Wszystko")
+      return getProducts();
+    return mylist.snapshots().map((snapshot) => snapshot.docs.map((document) => Product.fromFirestore(document.data())).toList());
+  }
+///__END_PRODUCT__///
 }
