@@ -34,30 +34,4 @@ class MyApp extends StatelessWidget {
       ),
     );
   }
-  // Widget build(BuildContext context) {
-  //   return StreamProvider<Userr>.value(
-  //     value:AuthService().user,
-  //     initialData: null,
-  //     child: MaterialApp(
-  //       title: 'Flutter Login UI',
-  //       debugShowCheckedModeBanner: false,
-  //       home: Wrapper(),
-  //     ),
-  //   );
-  // }
 }
-
-  //   return MaterialApp(
-  //     title: 'Flutter Login UI',
-  //     debugShowCheckedModeBanner: false,
-  //     home: Wrapper(),
-  //   );
-  // }
-    // return StreamProvider<Userr>.value(
-    //   value:AuthService().user,
-    //   child: MaterialApp(
-    //     title: 'Flutter Login UI',
-    //     debugShowCheckedModeBanner: false,
-    //     home: LoginScreen(),
-    //   ),
-    // );

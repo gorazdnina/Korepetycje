@@ -30,7 +30,6 @@ class Home extends StatefulWidget{
 
 class _HomeState extends State<Home>{
 
-  final AuthService _auth = AuthService();
   final DataBaseService _db = DataBaseService();
   String category = "Wszystko";
 
@@ -226,7 +225,7 @@ class _HomeState extends State<Home>{
  @override
   Widget build(BuildContext context){
     final user = Provider.of<Userr>(context);
-    
+
     return StreamProvider<List<Product>>.value(
     value: _db.productCat(category),
     initialData: [],

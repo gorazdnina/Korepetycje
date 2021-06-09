@@ -1,5 +1,7 @@
 
 
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app2/models/lessons.dart';
 import 'package:flutter_app2/models/userr.dart';
@@ -20,6 +22,7 @@ class _EditProductState extends State<EditProduct> {
   final priceController = TextEditingController();
   final categoryController = TextEditingController();
   final descriptionController = TextEditingController();
+  String category = "Matematyka";
 
   @override
   void dispose() {
@@ -78,13 +81,14 @@ class _EditProductState extends State<EditProduct> {
                 productProvider.changeName(value);
               },
             ),
-            TextField(
-              controller: categoryController,
-              decoration: InputDecoration(hintText: 'Product Category'),
-              onChanged: (value) {
-                productProvider.changeCategory(value);
-              },
-            ),
+            _dropDownCategory(),
+            // TextField(
+            //   controller: categoryController,
+            //   decoration: InputDecoration(hintText: 'Product Category'),
+            //   onChanged: (value) {
+            //     productProvider.changeCategory(value);
+            //   },
+            // ),
             TextField(
               controller: descriptionController,
               decoration: InputDecoration(hintText: 'Product Description'),
@@ -104,6 +108,7 @@ class _EditProductState extends State<EditProduct> {
               child: Text('Save'),
               onPressed: () {
                 productProvider.changeuid(user.uid);
+                productProvider.changeCategory(category);
                 productProvider.saveProduct();
                 Navigator.of(context).pop();
               },
@@ -122,4 +127,65 @@ class _EditProductState extends State<EditProduct> {
       ),
     );
   }
+
+
+
+    Widget _dropDownCategory(){
+    return StreamBuilder<QuerySnapshot>(
+    stream: FirebaseFirestore.instance.collection('category').snapshots(),
+    builder: (context, snapshot){
+      if (!snapshot.hasData) return const Center(
+        child: const CupertinoActivityIndicator(),
+      );
+      return new Container(
+        child: new Row(
+          children: <Widget>[
+            new Expanded(
+                flex: 2,
+                child: new Container(
+                  padding: EdgeInsets.fromLTRB(17.0,10.0,10.0,10.0),
+                  child: new Text("Category"),
+                )
+            ),
+            new Expanded(
+              flex: 3,
+              child:new InputDecorator(
+                decoration: const InputDecoration(
+                  hintText: 'Choose an category',
+                  hintStyle: TextStyle(
+                    fontSize: 16.0,
+                    fontFamily: "OpenSans",
+                    fontWeight: FontWeight.normal,
+                  ),
+                ),
+                isEmpty: category == null,
+                child: new DropdownButton(
+                  value: category,
+                  isDense: true,
+                  onChanged: (String newValue) {
+                    setState(() {
+                      category = newValue;
+                    });
+                  },
+                  items: snapshot.data.docs.map((DocumentSnapshot document) {
+                    return new DropdownMenuItem<String>(
+                        value: document.data()['category_name'],
+                        child: new Container(
+                          height: 30.0,
+                          padding: EdgeInsets.fromLTRB(10.0, 2.0, 10.0, 0.0),
+                          child: new Text(document.data()['category_name']),
+                        )
+                    );
+                  }).toList(),
+                ),
+              ),
+            ),
+          ],
+        ),
+      );
+    }
+  );
 }
+}
+
+

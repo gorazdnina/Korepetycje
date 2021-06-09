@@ -124,8 +124,6 @@ class DataBaseService{
 
   Stream<List<Product>> productOwner(String owner){
     final Query mylist = productCollection.where("uid", isEqualTo: owner);
-    print("Weszlismy tu i co ");
-    print(owner);
     return mylist.snapshots().map((snapshot) => snapshot.docs.map((document) => Product.fromFirestore(document.data())).toList());
   }
 ///__END_PRODUCT__///
