@@ -93,11 +93,10 @@ class _HomeState extends State<Home>{
   }
 
   Widget _myProducts(BuildContext context){
-    return MultiProvider(
-      providers: [
-        // ChangeNotifierProvider<ProductProvider>(create: (context)=> ProductProvider()),
-        StreamProvider<List<Product>>.value(value: _db.getProducts(), initialData: []),
-      ],
+      final user = Provider.of<Userr>(context);
+      return StreamProvider<List<Product>>.value(
+      value: _db.productOwner(user.uid),
+      initialData: [],
       child: Column(children:<Widget> [
          Expanded(
            child:Products(),
@@ -226,12 +225,9 @@ class _HomeState extends State<Home>{
 
  @override
   Widget build(BuildContext context){
-
-
     final user = Provider.of<Userr>(context);
+    
     return StreamProvider<List<Product>>.value(
-    //return StreamProvider<List<Lesons>>.value(
-    //value: _db.lesonsCat(category),
     value: _db.productCat(category),
     initialData: [],
     child: Scaffold(

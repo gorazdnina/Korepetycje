@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_app2/models/lessons.dart';
+import 'package:flutter_app2/models/userr.dart';
 import 'package:provider/provider.dart';
 
 import 'edit_products.dart';
@@ -10,6 +11,7 @@ class Products extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final products = Provider.of<List<Product>>(context);
+    final user = Provider.of<Userr>(context);
 
     return Scaffold(
         appBar: AppBar(
