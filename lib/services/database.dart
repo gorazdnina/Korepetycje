@@ -133,7 +133,7 @@ class DataBaseService{
 
 ///__CART_ITEM__///
   Future<void> saveCartItem(CartItem cartItem){
-    return cartItemCollection.doc(cartItem.productId).set(cartItem.toMap());
+    return cartItemCollection.doc(cartItem.cartItemId).set(cartItem.toMap());
   }
 
   Future<void> removeCartItem(String cartItemId){

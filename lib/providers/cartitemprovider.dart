@@ -23,6 +23,10 @@ class CartItemProvider with ChangeNotifier {
     _quantity = int.parse(value);
     notifyListeners();
   }
+  changeproductId(String value){
+    _productId = value;
+    notifyListeners();
+  }
 
   loadValues(CartItem cartItem){
     _cartItemId = cartItem.cartItemId;
@@ -33,8 +37,8 @@ class CartItemProvider with ChangeNotifier {
 
 
   saveCartItem() {
-    print(_productId);
-    if (_productId == null) {
+    print(_cartItemId);
+    if (_cartItemId == null) {
       var newCartItem = CartItem(uid: _uid,productId: _productId,quantity: _quantity,cartItemId: uuid.v4());
       firestoreService.saveCartItem(newCartItem);
     } else {

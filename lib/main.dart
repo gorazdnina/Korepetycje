@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_app2/models/lessons.dart';
+import 'package:flutter_app2/providers/cartitemprovider.dart';
 import 'package:flutter_app2/providers/productprovider.dart';
 import 'package:flutter_app2/screens/authenticate/login_screen.dart';
 import 'package:flutter_app2/screens/authenticate/sign_up_screen.dart';
@@ -24,6 +25,7 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider<ProductProvider>(create: (context) => ProductProvider()),
+        ChangeNotifierProvider<CartItemProvider>(create: (context)=> CartItemProvider()),
         StreamProvider<Userr>.value(value:AuthService().user,initialData: null,),
         //StreamProvider<List<Product>>.value(value: DataBaseService().getProducts(), initialData: []),
       ],
