@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter_app2/models/cartitem.dart';
 import 'package:flutter_app2/models/category.dart';
 import 'package:flutter_app2/models/lessons.dart';
 import 'package:flutter_app2/models/useerr.dart';
@@ -13,6 +14,7 @@ class DataBaseService{
   final CollectionReference lessonsCollection = FirebaseFirestore.instance.collection('lessons');
   final CollectionReference categoryCollection = FirebaseFirestore.instance.collection('category');
   final CollectionReference productCollection = FirebaseFirestore.instance.collection('Product');
+  final CollectionReference cartItemCollection = FirebaseFirestore.instance.collection("cartItem");
 
 
   Future updateUserData(String name, String phone, String email) async{
@@ -127,4 +129,20 @@ class DataBaseService{
     return mylist.snapshots().map((snapshot) => snapshot.docs.map((document) => Product.fromFirestore(document.data())).toList());
   }
 ///__END_PRODUCT__///
+
+
+///__CART_ITEM__///
+  Future<void> saveCartItem(CartItem cartItem){
+    return cartItemCollection.doc(cartItem.productId).set(cartItem.toMap());
+  }
+
+  Future<void> removeCartItem(String cartItemId){
+    return cartItemCollection.doc(cartItemId).delete();
+  }
+
+  Stream<List<CartItem>> cartItemOwner(String owner){
+    final Query mylist = cartItemCollection.where("uid", isEqualTo: owner);
+    return mylist.snapshots().map((snapshot) => snapshot.docs.map((document) => CartItem.fromFirestore(document.data())).toList());
+  }
+///__END_CART_ITEM__///
 }
