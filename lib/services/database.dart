@@ -128,6 +128,11 @@ class DataBaseService{
     final Query mylist = productCollection.where("uid", isEqualTo: owner);
     return mylist.snapshots().map((snapshot) => snapshot.docs.map((document) => Product.fromFirestore(document.data())).toList());
   }
+
+  Stream<Product> getProductById(String id){
+    final Query myproduct = productCollection.where("productId",isEqualTo: id);
+    return myproduct.snapshots().map((snapshot) => snapshot.docs.map((document) => Product.fromFirestore(document.data())).toList().elementAt(0));
+  }
 ///__END_PRODUCT__///
 
 

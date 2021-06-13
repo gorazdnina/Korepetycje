@@ -72,4 +72,8 @@ class ProductProvider with ChangeNotifier {
     firestoreService.removeProduct(productId);
   }
 
+  getproduct(String productId){
+    firestoreService.getProductById(productId);
+  }
+
 }

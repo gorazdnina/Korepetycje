@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app2/models/category.dart';
 import 'package:flutter_app2/services/auth.dart';
@@ -42,6 +43,13 @@ class Product{
       'uid' : uid
     };
   }
+  Product.fromSnapchot(DocumentSnapshot snapshot)
+      : productId = snapshot['productId'],
+        name = snapshot['name'],
+        price = snapshot['price'],
+        category = snapshot['category'],
+        descryption = snapshot['description'],
+        uid = snapshot['uid'];
 
   Product.fromFirestore(Map<String, dynamic> firestore)
       : productId = firestore['productId'],

@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_app2/models/cartitem.dart';
 import 'package:flutter_app2/models/lessons.dart';
 import 'package:flutter_app2/models/useerr.dart';
 import 'package:flutter_app2/models/userr.dart';
@@ -81,14 +82,25 @@ class _HomeState extends State<Home>{
       );
   }
 
-  Widget _cartScreen() {
-    return Container(
-      child: Column(children:<Widget> [
+  Widget _cartScreen(BuildContext context) {
+    final user = Provider.of<Userr>(context);
+     return StreamProvider<List<CartItem>>.value(
+       value: _db.cartItemOwner(user.uid),
+       initialData: [],
+        child: Column(children:<Widget> [
         Expanded(
           child:CartPage(),
         ),
       ],),
-    );
+     );
+
+    // return Container(
+    //   child: Column(children:<Widget> [
+    //     Expanded(
+    //       child:CartPage(),
+    //     ),
+    //   ],),
+    // );
   }
 
   Widget _myProducts(BuildContext context){
@@ -218,7 +230,7 @@ class _HomeState extends State<Home>{
   Widget _selectScreen(BuildContext context){
     if(_selectedIndex == 0) return _menuScreen(); 
     if(_selectedIndex == 2) return _myProducts(context);
-    if(_selectedIndex == 3) return _cartScreen();
+    if(_selectedIndex == 3) return _cartScreen(context);
       else return _calendarScreen();
   }
 
