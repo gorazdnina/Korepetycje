@@ -145,6 +145,10 @@ class DataBaseService{
     return cartItemCollection.doc(cartItemId).delete();
   }
 
+  Future<void> addquantity(String cartItemId,int quantity){
+    return cartItemCollection.doc(cartItemId).update({'quantity': quantity});
+  }
+
   Stream<List<CartItem>> cartItemOwner(String owner){
     final Query mylist = cartItemCollection.where("uid", isEqualTo: owner);
     return mylist.snapshots().map((snapshot) => snapshot.docs.map((document) => CartItem.fromFirestore(document.data())).toList());

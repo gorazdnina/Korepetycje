@@ -20,6 +20,7 @@ class CartPage extends StatefulWidget {
 class _CartPageState extends State<CartPage> {
   final DataBaseService _db = DataBaseService();
   CartItemProvider cartItemprovider =null;
+  double total=0;
   @override
   Widget build(BuildContext context) {
     cartItemprovider = Provider.of<CartItemProvider>(context);
@@ -32,7 +33,7 @@ class _CartPageState extends State<CartPage> {
           return ListView(
             children: <Widget>[
               createHeader(),
-              createSubTitle(),
+              createSubTitle(context),
               createCartList(context),
               footer(context)
             ],
@@ -61,7 +62,7 @@ class _CartPageState extends State<CartPage> {
               Container(
                 margin: EdgeInsets.only(right: 30),
                 child: Text(
-                  "Cena",
+                  total.toString(),
                   style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
                 ),
               ),
@@ -101,11 +102,12 @@ class _CartPageState extends State<CartPage> {
     );
   }
 
-  createSubTitle() {
+  createSubTitle(BuildContext context) {
+    final items = Provider.of<List<CartItem>>(context);
     return Container(
       alignment: Alignment.topLeft,
       child: Text(
-        "Total" +  "cart.length" + "lessons", // attach length of cart table
+        "Total " +  items.length.toString() + " lessons", // attach length of cart table
         style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
       ),
       margin: EdgeInsets.only(left: 12, top: 4),
@@ -116,6 +118,7 @@ class _CartPageState extends State<CartPage> {
 
   createCartList(BuildContext context) {
     final items = Provider.of<List<CartItem>>(context);
+    total = 0;
     return ListView.builder(
       shrinkWrap: true,
       primary: false,
@@ -133,15 +136,6 @@ class _CartPageState extends State<CartPage> {
       //drop item from database
   }
 
-
-  int count = 1; // do wywalenia
-  int pricePerHour = 30; // do wywalenia
-
-
-
-
-
-
  createCartListItem(CartItem cartitem) {
     String text = cartitem.productId;
      return StreamBuilder<QuerySnapshot>(
@@ -152,6 +146,7 @@ class _CartPageState extends State<CartPage> {
         );
         return Stack(
           children: snapshot.data.docs.map((DocumentSnapshot document) {
+             total = total + document.data()['price']*cartitem.quantity;
             return Stack(
               children: <Widget>[
                 Container(
@@ -207,7 +202,7 @@ class _CartPageState extends State<CartPage> {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: <Widget>[
                             Text(
-                             document.data()['price'].toString() + " PLN", //price per hour * count of hour
+                             (document.data()['price']*cartitem.quantity).toString() + " PLN", //price per hour * count of hour
                               style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
                             ),
                             Padding(
@@ -224,7 +219,8 @@ class _CartPageState extends State<CartPage> {
                                     ),
                                     onPressed: () {
                                       setState(() {
-                                        count--; //decrease hour of lessons from database
+                                        if(cartitem.quantity>0)
+                                          cartItemprovider.addquantity(cartitem.cartItemId, cartitem.quantity-1);
                                       });
                                     },
                                   ),
@@ -235,7 +231,7 @@ class _CartPageState extends State<CartPage> {
                                         top: 12, bottom: 12, right: 12, left: 12),
                                     alignment: Alignment.center,
                                     child: Text(
-                                      count.toString(),
+                                      cartitem.quantity.toString(),
                                       style:
                                       TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
                                     ),
@@ -246,7 +242,7 @@ class _CartPageState extends State<CartPage> {
                                         color: Color(0xFFECB6B6)),
                                     onPressed: () {
                                       setState(() {
-                                        count++; //add hour of lessons to database
+                                        cartItemprovider.addquantity(cartitem.cartItemId, cartitem.quantity+1);
                                       });
                                     },
                                   ),

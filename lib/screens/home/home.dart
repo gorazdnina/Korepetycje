@@ -220,7 +220,7 @@ class _HomeState extends State<Home>{
         },
         weekFormat: false,
         markedDatesMap: _markedDateMap,
-        height: 420.0,
+        height: 620.0,
         selectedDateTime: _currentDate,
         daysHaveCircularBorder: false, /// null for not rendering any border, true for circular border, false for rectangular border
       ),
