@@ -1,5 +1,3 @@
-import 'dart:html';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -44,6 +42,20 @@ class _CartPageState extends State<CartPage> {
   }
 
   footer(BuildContext context) {
+    final items = Provider.of<List<CartItem>>(context);
+    final products = Provider.of<List<Product>>(context);
+    total = 0;
+    for(int i=0;i<items.length;i++){
+      print("item");
+      for(int k=0;k<products.length;k++){
+        print("product");
+        if(products.elementAt(k).productId == items.elementAt(i).productId)
+          {
+            total = total +products.elementAt(k).price * items.elementAt(i).quantity;
+            print(total);
+          }
+      }
+    }
     return Container(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -118,13 +130,12 @@ class _CartPageState extends State<CartPage> {
 
   createCartList(BuildContext context) {
     final items = Provider.of<List<CartItem>>(context);
-    total = 0;
     return ListView.builder(
       shrinkWrap: true,
       primary: false,
       itemCount:items.length ?? 0,
       itemBuilder: (context, index) {
-        return createCartListItem(items[index]); //createCartListItem(cart: cart[index]);
+        return createCartListItem(items[index]);
       },
 
     );
@@ -132,12 +143,10 @@ class _CartPageState extends State<CartPage> {
 
   dropItemFromCart(String id){
       cartItemprovider.removeCartItem(id);
-      print("delete item from cart");
-      //drop item from database
   }
 
  createCartListItem(CartItem cartitem) {
-    String text = cartitem.productId;
+     String text = cartitem.productId;
      return StreamBuilder<QuerySnapshot>(
         stream: FirebaseFirestore.instance.collection('Product').where("productId",isEqualTo: cartitem.productId).snapshots(),
         builder: (context, snapshot){
@@ -146,7 +155,6 @@ class _CartPageState extends State<CartPage> {
         );
         return Stack(
           children: snapshot.data.docs.map((DocumentSnapshot document) {
-             total = total + document.data()['price']*cartitem.quantity;
             return Stack(
               children: <Widget>[
                 Container(
@@ -164,6 +172,7 @@ class _CartPageState extends State<CartPage> {
                 decoration: BoxDecoration(
                     borderRadius: BorderRadius.all(Radius.circular(14)),
                     color: Colors.blue.shade200,
+                    
                     image: DecorationImage(
                         image: AssetImage("images/shoes_1.png"))),
               ),*/
@@ -279,7 +288,6 @@ class _CartPageState extends State<CartPage> {
               onPressed: () {
                 setState(() {
                   dropItemFromCart(cartitem.cartItemId);
-                  //print("delete item from cart"); //delete item from cart in database
                 });
               },
             ),

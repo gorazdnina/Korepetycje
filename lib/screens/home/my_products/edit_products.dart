@@ -109,7 +109,8 @@ class _EditProductState extends State<EditProduct> {
               onPressed: () {
                 productProvider.changeuid(user.uid);
                 productProvider.changeCategory(category);
-                productProvider.saveProduct();
+                if(descriptionController.value != null && nameController.value!=null && priceController.value!=null)
+                  productProvider.saveProduct();
                 Navigator.of(context).pop();
               },
             ),
@@ -187,5 +188,3 @@ class _EditProductState extends State<EditProduct> {
   );
 }
 }
-
-
