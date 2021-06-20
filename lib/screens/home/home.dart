@@ -125,6 +125,7 @@ class _HomeState extends State<Home>{
         child: const CupertinoActivityIndicator(),
       );
       return new Container(
+        color: Color(0xFFECB6B6),
         child: new Row(
           children: <Widget>[
             new Expanded(
@@ -176,7 +177,21 @@ class _HomeState extends State<Home>{
 }
 
   Widget _calendarScreen() {
-    return Container(
+    return Scaffold(
+        appBar: AppBar(
+          title: Text('Your tutoring'),
+          backgroundColor: Color(0xFFECB6B6),
+          actions: <Widget>[
+            IconButton(
+              icon: Icon(
+                Icons.menu,
+                size: 30.0,
+                ////TODO onPressed
+              ),
+            )
+          ],
+      ),
+      body: Container(
       child: CalendarCarousel<Event>(
         onDayPressed: (DateTime date, List<Event> events) {
           this.setState(() => _currentDate = date);
@@ -224,6 +239,7 @@ class _HomeState extends State<Home>{
         selectedDateTime: _currentDate,
         daysHaveCircularBorder: false, /// null for not rendering any border, true for circular border, false for rectangular border
       ),
+    )
     );
   }
 
@@ -251,12 +267,6 @@ class _HomeState extends State<Home>{
               Container(
                 height: double.infinity,
                 width: double.infinity,
-                decoration: BoxDecoration(
-                  image: DecorationImage(
-                    image: AssetImage("assets/images/tlo.jpeg"),
-                    fit: BoxFit.cover,
-                  ),
-                ),
               ),
               _selectScreen(context),
            ],
@@ -274,8 +284,8 @@ class _HomeState extends State<Home>{
             label: 'Kalendarz',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.favorite),
-            label: 'Moje',
+            icon: Icon(Icons.add_to_photos),
+            label: 'Moje korki',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.shopping_cart),
@@ -294,7 +304,7 @@ class _HomeState extends State<Home>{
           title: Text('title'),
           appBar: AppBar(),
           widgets: <Widget>[Icon(Icons.more_vert)],
-        ),
+      ),
     ),
     );
   }

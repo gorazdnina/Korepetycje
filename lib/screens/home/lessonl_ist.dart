@@ -51,11 +51,16 @@ class LesonTitle  extends StatelessWidget {
         margin: EdgeInsets.fromLTRB(20, 6, 20, 0),
         child: ListTile(
           leading: CircleAvatar(
+            child: Icon(
+              Icons.menu_book,
+              color: Colors.white,
+              size: 35,
+            ),
             radius: 25,
             backgroundColor: Colors.pink[100],
           ),
           title: Text(product.name),
-          subtitle: Text("Cena: ${product.price.toString()}zł"),
+          subtitle: Text("Cena: ${product.price.toString()} PLN"),
           onTap: (){
              return Navigator.push(context,MaterialPageRoute(builder: (context) => DetailPage(product: product,)));
           }

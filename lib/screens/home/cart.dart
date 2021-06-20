@@ -30,8 +30,7 @@ class _CartPageState extends State<CartPage> {
         builder: (context) {
           return ListView(
             children: <Widget>[
-              createHeader(),
-              createSubTitle(context),
+              createHeader(context),
               createCartList(context),
               footer(context)
             ],
@@ -57,6 +56,7 @@ class _CartPageState extends State<CartPage> {
       }
     }
     return Container(
+
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisAlignment: MainAxisAlignment.end,
@@ -68,47 +68,62 @@ class _CartPageState extends State<CartPage> {
                 margin: EdgeInsets.only(left: 30),
                 child: Text(
                   "Total",
-                  style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                 ),
               ),
               Container(
                 margin: EdgeInsets.only(right: 30),
                 child: Text(
-                  total.toString(),
-                  style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
+                  total.toString() + " PLN",
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                 ),
               ),
             ],
           ),
-          //Utils.getSizedBox(height: 8),
-          RaisedButton(
-            onPressed: () {
-             /* Navigator.push(context,
-                  new MaterialPageRoute(builder: (context) => CheckOutPage()));*/
-              print('go checkout page??');
-            },
-            color: Color(0xFFECB6B6),
-            padding: EdgeInsets.only(top: 12, left: 60, right: 60, bottom: 12),
-            shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.all(Radius.circular(24))),
-            child: Text(
-              "Checkout",
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+          Container(
+            padding: const EdgeInsets.all(32),
+            child: RaisedButton(
+              onPressed: () {
+               /* Navigator.push(context,
+                    new MaterialPageRoute(builder: (context) => CheckOutPage()));*/
+                print('go checkout page??');
+              },
+              color: Color(0xFFECB6B6),
+              padding: EdgeInsets.only(top: 12, left: 60, right: 60, bottom: 12),
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(24))),
+              child: Text(
+                "KUP TERAZ",
+                style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                    color: Color(0xFFFDFDFD),
+                ),
+              ),
             ),
-          ),
-          //Utils.getSizedBox(height: 8),
+          ),//Utils.getSizedBox(height: 8),
         ],
       ),
       margin: EdgeInsets.only(top: 16),
     );
   }
 
-  createHeader() {
+  createHeader(BuildContext context) {
     return Container(
+      padding: const EdgeInsets.all(8.0),
       alignment: Alignment.topLeft,
-      child: Text(
-        "KOSZYK",
-        style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+      child: Row(
+        children: [
+          Text(
+            "KOSZYK",
+            style: TextStyle(
+              fontSize: 20,
+              color: Colors.grey[900],
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          createSubTitle(context),
+      ]
       ),
       margin: EdgeInsets.only(left: 12, top: 12),
     );
@@ -120,7 +135,10 @@ class _CartPageState extends State<CartPage> {
       alignment: Alignment.topLeft,
       child: Text(
         "Total " +  items.length.toString() + " lessons", // attach length of cart table
-        style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
+        style: TextStyle(
+          fontSize: 14,
+          color: Colors.grey[600],
+        ),
       ),
       margin: EdgeInsets.only(left: 12, top: 4),
     );
@@ -164,18 +182,21 @@ class _CartPageState extends State<CartPage> {
                 borderRadius: BorderRadius.all(Radius.circular(16))),
                 child: Row(
                   children: <Widget>[
-              /* jakbysmy chcieli zzdjjj do kodu
-              Container(
-                margin: EdgeInsets.only(right: 8, left: 8, top: 8, bottom: 8),
-                width: 80,
-                height: 80,
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.all(Radius.circular(14)),
-                    color: Colors.blue.shade200,
-                    
-                    image: DecorationImage(
-                        image: AssetImage("images/shoes_1.png"))),
-              ),*/
+
+              // Container(
+              //   margin: EdgeInsets.only(right: 8, left: 8, top: 8, bottom: 8),
+              //   width: 50,
+              //   height: 50,
+              //   child: CircleAvatar(
+              //           child: Icon(
+              //             Icons.menu_book,
+              //             color: Colors.white,
+              //             size: 35,
+              //           ),
+              //           radius: 25,
+              //           backgroundColor: Colors.pink[100],
+              //         ),
+              // ),
               Expanded(
                 child: Container(
                   padding: const EdgeInsets.all(8.0),
@@ -194,17 +215,23 @@ class _CartPageState extends State<CartPage> {
                         ),
                       ),
                       //Utils.getSizedBox(height: 6),
-                      Text(
-                        "$text",
-                        style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
-                      ),
+                      // Text(
+                      //   "$text",
+                      //   style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
+                      // ),
                       Text(
                         "Data: " + "13.06.2021",
-                        style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
+                        style: TextStyle(
+                          fontSize: 14,
+                          color: Colors.grey[600],
+                        ),
                       ),
                       Text(
                         "Godzin: " + cartitem.quantity.toString(),
-                        style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
+                        style: TextStyle(
+                          fontSize: 14,
+                          color: Colors.grey[600],
+                        ),
                       ),
                       Container(
                         child: Row(
@@ -212,7 +239,7 @@ class _CartPageState extends State<CartPage> {
                           children: <Widget>[
                             Text(
                              (document.data()['price']*cartitem.quantity).toString() + " PLN", //price per hour * count of hour
-                              style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
+                              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                             ),
                             Padding(
                               padding: const EdgeInsets.all(8.0),

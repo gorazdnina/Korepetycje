@@ -5,9 +5,11 @@ import 'package:flutter_app2/models/lessons.dart';
 import 'package:flutter_app2/models/userr.dart';
 import 'package:provider/provider.dart';
 
+import '../detailpage.dart';
 import 'edit_products.dart';
 
 class Products extends StatelessWidget {
+
   @override
   Widget build(BuildContext context) {
     final products = Provider.of<List<Product>>(context);
@@ -15,34 +17,46 @@ class Products extends StatelessWidget {
 
     return Scaffold(
         appBar: AppBar(
-          title: Text('Products'),
-          backgroundColor: Colors.pink[100],
+          title: Text('Your products'),
+          backgroundColor: Color(0xFFECB6B6),
           actions: <Widget>[
             IconButton(
               icon: Icon(
-                Icons.add,
+                Icons.edit,
                 size: 30.0,
+                ////TODO onPressed
               ),
-              onPressed: () {
-                Navigator.of(context).push(
-                    MaterialPageRoute(builder: (context) => EditProduct()));
-              },
             )
           ],
         ),
-        body: (products != null)
+        body: Container(
+            child:(products != null)
             ? ListView.builder(
                 itemCount: products.length,
                 itemBuilder: (context, index) {
-                  return ListTile(
-                    title: Text(products[index].name??"test"),
-                    trailing: Text(products[index].price.toString()??"test2"),
-                    onTap: () {
-                      Navigator.of(context).push(MaterialPageRoute(
-                          builder: (context) => EditProduct(products[index])));
-                    },
+                  return Card(
+                    child: ListTile(
+                      title: Text(products[index].name??"test"),
+                      trailing: Text(products[index].price.toString() + " PLN"??"test2" ),
+                      onTap: () {
+                        Navigator.of(context).push(MaterialPageRoute(
+                            builder: (context) => DetailPage(product: products[index],)));
+                      },
+                    )
                   );
                 })
-            : Center(child: CircularProgressIndicator()));
+            : Center(child: CircularProgressIndicator())
+        ),
+      floatingActionButton: FloatingActionButton(
+        backgroundColor: Color(0xFFECB6B6),
+        onPressed: () {
+          Navigator.of(context).push(
+              MaterialPageRoute(builder: (context) => EditProduct()));
+        },
+      tooltip: 'Increment',
+      child: Icon(Icons.add),
+    ),
+    );
+
   }
 }

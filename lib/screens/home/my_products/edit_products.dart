@@ -69,17 +69,24 @@ class _EditProductState extends State<EditProduct> {
     final user = Provider.of<Userr>(context);
 
     return Scaffold(
-      appBar: AppBar(title: Text('Edit Product'),backgroundColor:Colors.pink[100] ,),
-      body: Padding(
+      appBar: AppBar(title: Text('Add Product'),backgroundColor: Color(0xFFECB6B6) ,),
+      body: Container(
         padding: const EdgeInsets.all(8.0),
         child: ListView(
+
           children: <Widget>[
-            TextField(
-              controller: nameController,
-              decoration: InputDecoration(hintText: 'Product Name'),
-              onChanged: (value) {
-                productProvider.changeName(value);
-              },
+          Card(
+            margin: const EdgeInsets.all(8),
+            child:TextField(
+                controller: nameController,
+                decoration: InputDecoration(
+                    icon: Icon(Icons.title),
+                    hintText: 'Product Name',
+                ),
+                onChanged: (value) {
+                  productProvider.changeName(value);
+                },
+              ),
             ),
             _dropDownCategory(),
             // TextField(
@@ -89,23 +96,49 @@ class _EditProductState extends State<EditProduct> {
             //     productProvider.changeCategory(value);
             //   },
             // ),
-            TextField(
-              controller: descriptionController,
-              decoration: InputDecoration(hintText: 'Product Description'),
-              onChanged: (value) {
-                productProvider.changeDescription(value);
-              },
+            Card(
+              margin: const EdgeInsets.all(8),
+              child: TextField(
+                  keyboardType: TextInputType.multiline,
+                  minLines: 4,
+                  maxLines: 6,
+                  controller: descriptionController,
+                  decoration: InputDecoration(hintText: 'Product Description'),
+                  onChanged: (value) {
+                    productProvider.changeDescription(value);
+                  },
+                ),
             ),
-            TextField(
-              controller: priceController,
-              decoration: InputDecoration(hintText: 'Product Price'),
-              onChanged: (value) => productProvider.changePrice(value),
+            Card(
+              margin: const EdgeInsets.all(8),
+              child:TextField(
+                controller: priceController,
+                decoration: InputDecoration(
+                    hintText: 'Product Price',
+
+                ),
+                onChanged: (value) => productProvider.changePrice(value),
+              ),
             ),
             SizedBox(
               height: 20.0,
             ),
             RaisedButton(
-              child: Text('Save'),
+              padding: EdgeInsets.all(15.0),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(30.0),
+              ),
+              color: Color(0xFFECB6B6),
+              child: Text(
+                  'Save',
+                  style: TextStyle(
+                    color: Color(0xFFFDFDFD),
+                    letterSpacing: 1.5,
+                    fontSize: 18.0,
+                    fontWeight: FontWeight.bold,
+                    fontFamily: 'OpenSans',
+                  ),
+              ),
               onPressed: () {
                 productProvider.changeuid(user.uid);
                 productProvider.changeCategory(category);
@@ -138,14 +171,21 @@ class _EditProductState extends State<EditProduct> {
       if (!snapshot.hasData) return const Center(
         child: const CupertinoActivityIndicator(),
       );
-      return new Container(
+      return Card(
+          margin: const EdgeInsets.all(8),
         child: new Row(
           children: <Widget>[
             new Expanded(
                 flex: 2,
                 child: new Container(
                   padding: EdgeInsets.fromLTRB(17.0,10.0,10.0,10.0),
-                  child: new Text("Category"),
+                  child: new Text(
+                      "Category",
+                      style: TextStyle(
+                        fontSize: 16,
+                        color: Colors.grey[600],
+                      ),
+                  ),
                 )
             ),
             new Expanded(
