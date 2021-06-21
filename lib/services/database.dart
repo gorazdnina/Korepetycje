@@ -25,9 +25,10 @@ class DataBaseService{
     });
   }
 
-  List<Useerr> _userListFromSnapshot(QuerySnapshot snapshot){
+  List<UserData> _userListFromSnapshot(QuerySnapshot snapshot){
     return snapshot.docs.map((doc){
-      return Useerr(
+      return UserData(
+        uid: doc.id,
         name: doc.data()['name'] ?? '',
         email: doc.data()['email'] ?? '',
         phone: doc.data()['phone'] ?? '',
@@ -35,8 +36,12 @@ class DataBaseService{
     }).toList();
   }
 
-  Stream<List<Useerr>> get brews {
+  Stream<List<UserData>> get brews {
     return brewCollection.snapshots().map(_userListFromSnapshot);
+  }
+
+  Stream<UserData> userinfo(String uid){
+    return brewCollection.doc(uid).snapshots().map(_userDataFromSnapshot);
   }
 
   // get user doc stream
@@ -53,6 +58,7 @@ class DataBaseService{
       phone: snapshot.data()['phone']
     );
   }
+
 
   ////For lessons features /////
 //   List<Lesons> _lessonListFromSnapshot(QuerySnapshot snapshot){
@@ -99,6 +105,7 @@ class DataBaseService{
       );
     }).toList();
   }
+  
   ////END CATEGORY
   
 
@@ -153,5 +160,8 @@ class DataBaseService{
     final Query mylist = cartItemCollection.where("uid", isEqualTo: owner);
     return mylist.snapshots().map((snapshot) => snapshot.docs.map((document) => CartItem.fromFirestore(document.data())).toList());
   }
+  // Future<void> removeCartItems(String ownerid){
+    
+  // }
 ///__END_CART_ITEM__///
 }

@@ -29,6 +29,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider<CartItemProvider>(create: (context)=> CartItemProvider()),
         StreamProvider<Userr>.value(value:AuthService().user,initialData: null,),
         StreamProvider<List<Product>>.value(value: DataBaseService().getProducts(), initialData: []),  ///to bylo skomentowane
+        StreamProvider<List<UserData>>.value(value: DataBaseService().brews, initialData: []),
       ],
       child: MaterialApp(
         title: 'Flutter Login UI',

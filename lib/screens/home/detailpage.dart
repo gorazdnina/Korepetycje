@@ -4,6 +4,7 @@ import 'package:flutter_app2/models/lessons.dart';
 import 'package:flutter_app2/models/userr.dart';
 import 'package:flutter_app2/providers/cartitemprovider.dart';
 import 'package:flutter_app2/screens/home/appbar.dart';
+import 'package:flutter_app2/services/database.dart';
 import 'package:provider/provider.dart';
 
 class DetailPage extends StatefulWidget {
@@ -22,6 +23,12 @@ class _DetailPageState extends State<DetailPage>{
 
 
   Widget tutorDataSection(BuildContext context) {
+    final user = Provider.of<List<UserData>>(context);
+    UserData us;
+    for ( int i =0; i<user.length;i++){
+      if(user.elementAt(i).uid.toString() == widget.product.uid.toString())
+        us = user.elementAt(i);
+    }
     return Container(
       padding: const EdgeInsets.all(32),
       child: Row(
@@ -37,8 +44,8 @@ class _DetailPageState extends State<DetailPage>{
               radius: 25,
               backgroundColor: Color(0xFFECB6B6),
             ),
-              title: Text("widget.tutor.name"), ////TODO connect to database
-              subtitle: Text("widget.tutor.level"), //moze tu poziom wiedzy nauczyciela np student lub nauczyciel////TODO
+              title: Text(us.name), ////TODO connect to database
+              subtitle: Text("Student and Teacher"), //moze tu poziom wiedzy nauczyciela np student lub nauczyciel////TODO
               onTap: (){
                 print("Tutor desc pagae here"); ////TODO connect to database
                 //return Navigator.push(context,MaterialPageRoute(builder: (context) => DetailPage(product: product,)));
@@ -153,6 +160,12 @@ class _DetailPageState extends State<DetailPage>{
   }
 
   Widget detailSection(BuildContext context){
+    final user = Provider.of<List<UserData>>(context);
+    UserData us;
+    for ( int i =0; i<user.length;i++){
+      if(user.elementAt(i).uid.toString() == widget.product.uid.toString())
+        us = user.elementAt(i);
+    }
      return Container(
        padding: const EdgeInsets.all(32),
        child: Row(
@@ -173,13 +186,13 @@ class _DetailPageState extends State<DetailPage>{
                    ),
                  ),
                  Text(
-                   'tel.:' + ' ' + '666213700',//'widget.product.tutorId.phone', ////TODO add new field: tutorId to database and new table: tutor -> phone
+                   us.phone ?? '',
                    style: TextStyle(
                      color: Colors.grey[500],
                    ),
                  ),
                  Text(
-                   'email:' + ' ' + 'alajestem@gmail.com',//'widget.product.tutorId.email', ////TODO add new field: tutorId to database and new table: tutor -> email
+                   us.email ?? '',
                    style: TextStyle(
                      color: Colors.grey[500],
                    ),

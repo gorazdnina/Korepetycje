@@ -40,7 +40,7 @@ class Products extends StatelessWidget {
                       trailing: Text(products[index].price.toString() + " PLN"??"test2" ),
                       onTap: () {
                         Navigator.of(context).push(MaterialPageRoute(
-                            builder: (context) => DetailPage(product: products[index],)));
+                            builder: (context) => EditProduct(products[index],)));
                       },
                     )
                   );

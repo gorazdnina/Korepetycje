@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app2/models/cartitem.dart';
 import 'package:flutter_app2/models/lessons.dart';
+import 'package:flutter_app2/models/userr.dart';
 import 'package:flutter_app2/providers/cartitemprovider.dart';
 import 'package:flutter_app2/providers/productprovider.dart';
 import 'package:flutter_app2/screens/home/appbar.dart';
@@ -43,20 +44,17 @@ class _CartPageState extends State<CartPage> {
   footer(BuildContext context) {
     final items = Provider.of<List<CartItem>>(context);
     final products = Provider.of<List<Product>>(context);
+    final user = Provider.of<Userr>(context);
     total = 0;
     for(int i=0;i<items.length;i++){
-      print("item");
       for(int k=0;k<products.length;k++){
-        print("product");
         if(products.elementAt(k).productId == items.elementAt(i).productId)
           {
             total = total +products.elementAt(k).price * items.elementAt(i).quantity;
-            print(total);
           }
       }
     }
     return Container(
-
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisAlignment: MainAxisAlignment.end,
@@ -84,8 +82,12 @@ class _CartPageState extends State<CartPage> {
             padding: const EdgeInsets.all(32),
             child: RaisedButton(
               onPressed: () {
-               /* Navigator.push(context,
-                    new MaterialPageRoute(builder: (context) => CheckOutPage()));*/
+                for (int i=0;i<items.length;i++){
+                  if(items.elementAt(i).uid==user.uid)
+                  {
+                    FirebaseFirestore.instance.collection('cartItem').doc(items.elementAt(i).cartItemId).delete();
+                  }
+                }
                 print('go checkout page??');
               },
               color: Color(0xFFECB6B6),

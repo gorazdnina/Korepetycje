@@ -56,4 +56,8 @@ class CartItemProvider with ChangeNotifier {
     firestoreService.addquantity(cartItemId,quantity);
   }
 
+  // removeCartItems(String ownerid){
+  //   firestoreService.removeCartItems(ownerid);
+  // }
+
 }
