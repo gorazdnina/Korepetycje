@@ -57,7 +57,7 @@ class LesonTitle  extends StatelessWidget {
               size: 35,
             ),
             radius: 25,
-            backgroundColor: Colors.pink[100],
+            backgroundColor: Color(0xFFECB6B6),
           ),
           title: Text(product.name),
           subtitle: Text("Cena: ${product.price.toString()} PLN"),

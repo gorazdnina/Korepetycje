@@ -14,6 +14,7 @@ class Products extends StatelessWidget {
   Widget build(BuildContext context) {
     final products = Provider.of<List<Product>>(context);
     final user = Provider.of<Userr>(context);
+    bool edit = false;
 
     return Scaffold(
         appBar: AppBar(
@@ -24,8 +25,12 @@ class Products extends StatelessWidget {
               icon: Icon(
                 Icons.edit,
                 size: 30.0,
-                ////TODO onPressed
               ),
+              onPressed: () {
+                if(edit!=true) edit = true;
+                else edit = false;
+                },
+              ////TODO onPressed
             )
           ],
         ),
@@ -39,8 +44,14 @@ class Products extends StatelessWidget {
                       title: Text(products[index].name??"test"),
                       trailing: Text(products[index].price.toString() + " PLN"??"test2" ),
                       onTap: () {
-                        Navigator.of(context).push(MaterialPageRoute(
-                            builder: (context) => EditProduct(products[index],)));
+                        if(edit==true) {
+                          edit = false;
+                          Navigator.of(context).push(MaterialPageRoute(
+                              builder: (context) => EditProduct(products[index],)));
+                        } else {
+                          Navigator.of(context).push(MaterialPageRoute(
+                              builder: (context) => DetailPage(product: products[index],)));
+                        }
                       },
                     )
                   );

@@ -124,7 +124,7 @@ class _EditProductState extends State<EditProduct> {
               height: 20.0,
             ),
             RaisedButton(
-              padding: EdgeInsets.all(15.0),
+              padding: const EdgeInsets.all(15.0),
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(30.0),
               ),
@@ -147,10 +147,26 @@ class _EditProductState extends State<EditProduct> {
                 Navigator.of(context).pop();
               },
             ),
+            SizedBox(
+              height: 20.0,
+            ),
             (widget.product !=null) ? RaisedButton(
-              color: Colors.red,
+              padding: const EdgeInsets.all(15.0),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(30.0),
+              ),
+              color: Color(0xFF939292),
               textColor: Colors.white,
-              child: Text('Delete'),
+              child: Text(
+                'Delete',
+                style: TextStyle(
+                  color: Color(0xFFFDFDFD),
+                  letterSpacing: 1.5,
+                  fontSize: 18.0,
+                  fontWeight: FontWeight.bold,
+                  fontFamily: 'OpenSans',
+                ),
+              ),
               onPressed: () {
                 productProvider.removeProduct(widget.product.productId);
                 Navigator.of(context).pop();

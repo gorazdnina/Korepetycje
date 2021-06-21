@@ -4,6 +4,7 @@ import 'package:flutter_app2/models/lessons.dart';
 import 'package:flutter_app2/models/userr.dart';
 import 'package:flutter_app2/providers/cartitemprovider.dart';
 import 'package:flutter_app2/screens/home/appbar.dart';
+import 'package:flutter_app2/screens/home/tutor_detail_screen.dart';
 import 'package:flutter_app2/services/database.dart';
 import 'package:provider/provider.dart';
 
@@ -47,7 +48,8 @@ class _DetailPageState extends State<DetailPage>{
               title: Text(us.name), ////TODO connect to database
               subtitle: Text("Student and Teacher"), //moze tu poziom wiedzy nauczyciela np student lub nauczyciel////TODO
               onTap: (){
-                print("Tutor desc pagae here"); ////TODO connect to database
+                Navigator.of(context).push(MaterialPageRoute(
+                    builder: (context) => TutorDetailPage(user: us)));
                 //return Navigator.push(context,MaterialPageRoute(builder: (context) => DetailPage(product: product,)));
               }
           ),
@@ -169,13 +171,14 @@ class _DetailPageState extends State<DetailPage>{
      return Container(
        padding: const EdgeInsets.all(32),
        child: Row(
+         crossAxisAlignment: CrossAxisAlignment.start,
+         mainAxisAlignment: MainAxisAlignment.spaceBetween,
          children: [
            Expanded(
-             /*1*/
              child: Column(
+               mainAxisAlignment: MainAxisAlignment.start,
                crossAxisAlignment: CrossAxisAlignment.start,
                children: [
-                 /*2*/
                  Container(
                    padding: const EdgeInsets.only(bottom: 8),
                    child: Text(
@@ -200,13 +203,11 @@ class _DetailPageState extends State<DetailPage>{
                ],
              ),
            ),
-           /*3*/
            Expanded(
-             /*1*/
              child: Column(
-               crossAxisAlignment: CrossAxisAlignment.start,
+               mainAxisAlignment: MainAxisAlignment.start,
+               crossAxisAlignment: CrossAxisAlignment.end,
                children: [
-                 /*2*/
                  Container(
                    padding: const EdgeInsets.only(bottom: 8),
                    child: Text(
@@ -217,7 +218,7 @@ class _DetailPageState extends State<DetailPage>{
                    ),
                  ),
                  Text(
-                   'Kandersteg, Switzerland',//'widget.product.tutorId.localization', ////TODO add new field: tutorId to database and new table: tutor -> localization
+                   'Lodz, Poland',//'widget.product.tutorId.localization', ////TODO add new field: tutorId to database and new table: tutor -> localization
                    style: TextStyle(
                      color: Colors.grey[500],
                    ),
@@ -230,7 +231,7 @@ class _DetailPageState extends State<DetailPage>{
      );
   }
 
-   // @override
+  @override
   Widget build(BuildContext context){
 
     return Scaffold(
